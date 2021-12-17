@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { Center, Container, FormField, FormGroup } from "./styled/Home.styled";
+import {
+    Container,
+    FormField,
+    FormGroup,
+    Illustration,
+} from "./styled/Home.styled";
 
 const Home = () => {
     const [discord, setDiscord] = useState("");
@@ -10,7 +15,7 @@ const Home = () => {
 
     return (
         <Container>
-            <Center>
+            <div>
                 <h1>
                     Chatterbox, chat
                     <br />
@@ -36,7 +41,13 @@ const Home = () => {
                         onChange={handleChange}
                     />
                 </FormGroup>
-            </Center>
+            </div>
+
+            <div>
+                <Illustration
+                    src={`${process.env.PUBLIC_URL}/images/home-illustration.svg`}
+                />
+            </div>
         </Container>
     );
 };

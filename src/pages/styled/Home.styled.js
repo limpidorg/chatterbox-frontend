@@ -7,6 +7,7 @@ export const Container = styled.div`
 
     display: flex;
     align-items: center;
+    justify-content: space-evenly;
 
     h1 {
         margin: 0px;
@@ -14,43 +15,16 @@ export const Container = styled.div`
         font-family: inherit;
         font-weight: medium;
         font-size: 3.5rem;
-        line-height: 70px;
+        line-height: 75px;
     }
 
     p {
         color: #949494;
-        margin: 25px 0 25px 0;
+        margin: 25px 0 35px 0;
 
         font-family: inherit;
         font-weight: normal;
         font-size: 1rem;
-    }
-`;
-
-export const Center = styled.div``;
-
-export const FormField = styled.input`
-    display: block;
-    width: 100%;
-    padding: 8px 16px;
-    line-height: 25px;
-    font-size: 1rem;
-    font-weight: 500;
-    font-family: inherit;
-    border-radius: 6px;
-    -webkit-appearance: none;
-    color: #949494;
-    border: 2px solid #9fc5d0;
-    background: #ffff;
-    transition: border 0.3s ease;
-
-    &:focus {
-        outline: none;
-        border-color: #5b9cae;
-    }
-
-    &::placeholder {
-        color: #949494;
     }
 `;
 
@@ -102,4 +76,33 @@ export const FormGroup = styled.div`
             border-color: #5b9cae;
         }
     }
+`;
+
+export const FormField = styled.input`
+    display: block;
+    width: 100%;
+    padding: 8px 16px;
+    line-height: 25px;
+    font-size: 1rem;
+    font-weight: 500;
+    font-family: inherit;
+    border-radius: 6px;
+    -webkit-appearance: none;
+    color: #949494;
+    border: 2px solid #9fc5d0;
+    background: #ffff;
+    transition: border 0.3s ease;
+
+    &:focus {
+        outline: none;
+        border-color: #5b9cae;
+    }
+
+    &::placeholder {
+        color: #949494;
+    }
+`;
+
+export const Illustration = styled.img`
+    height: 650px;
 `;
