@@ -14,23 +14,37 @@ export const Container = styled.div`
 
         font-family: inherit;
         font-weight: medium;
-        font-size: 3.5rem;
-        line-height: 75px;
+        font-size: 4rem;
+        line-height: 85px;
+
+        span {
+            font-style: italic;
+        }
     }
 
     p {
         color: #949494;
-        margin: 25px 0 35px 0;
+        margin: 25px 0 45px 0;
 
         font-family: inherit;
         font-weight: normal;
-        font-size: 1rem;
+        font-size: 1.5rem;
+
+        span {
+            font-style: italic;
+        }
+    }
+
+    a {
+        color: #5b9cae;
+        text-decoration: none;
     }
 `;
 
 export const FormGroup = styled.div`
     display: flex;
     width: 450px;
+    margin-bottom: 15px;
 
     & > span,
     .form-field {
@@ -61,8 +75,8 @@ export const FormGroup = styled.div`
 
     & > span {
         text-align: center;
-        padding: 8px 12px;
-        font-size: 1rem;
+        padding: 12px 12px;
+        font-size: 1.25rem;
         line-height: 25px;
         color: #ffff;
         background: #9fc5d0;
@@ -83,7 +97,7 @@ export const FormField = styled.input`
     width: 100%;
     padding: 8px 16px;
     line-height: 25px;
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: 500;
     font-family: inherit;
     border-radius: 6px;
@@ -104,5 +118,5 @@ export const FormField = styled.input`
 `;
 
 export const Illustration = styled.img`
-    height: 650px;
+    height: 725px;
 `;

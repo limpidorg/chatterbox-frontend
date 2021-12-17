@@ -17,9 +17,9 @@ const Home = () => {
         <Container>
             <div>
                 <h1>
-                    Chatterbox, chat
+                    Chatterbox,
                     <br />
-                    <span>anonymously</span>
+                    Chat <span>anonymously</span>
                 </h1>
 
                 <p>
@@ -41,6 +41,7 @@ const Home = () => {
                         onChange={handleChange}
                     />
                 </FormGroup>
+                <a href="/">Continue without discord</a>
             </div>
 
             <div>
