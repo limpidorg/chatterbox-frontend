@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { ThemeProvider } from "styled-components";
+import { Route, Switch } from "react-router-dom";
+import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
+import WaitingRoom from "./pages/WaitingRoom";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const theme = {
+        mainColors: {
+            darkGrey: "#444444",
+            grey: "#737373",
+            lightGrey: "#DADADA",
+            brokenBlack: "#161616",
+            lightBlack: "#393939",
+        },
+    };
+
+    // GOOGLE ANALYTICS
+
+    return (
+        <ThemeProvider theme={theme}>
+            <Switch>
+                <Route exact path="/">
+                    <Home />
+                </Route>
+
+                <Route exact path="/waiting-room">
+                    <WaitingRoom />
+                </Route>
+
+                <Route>
+                    <NotFound />
+                </Route>
+            </Switch>
+        </ThemeProvider>
+    );
 }
 
 export default App;
