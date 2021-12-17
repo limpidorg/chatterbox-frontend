@@ -4,16 +4,15 @@ import { Route, Switch } from "react-router-dom";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import WaitingRoom from "./pages/WaitingRoom";
-import "./index.css"
+import "./index.css";
 
 function App() {
     const theme = {
         mainColors: {
-            darkGrey: "#444444",
-            grey: "#737373",
-            lightGrey: "#DADADA",
-            brokenBlack: "#161616",
-            lightBlack: "#393939",
+            darkBlue: "#5b9cae",
+            blue: "#9fc5d0",
+            lightBlue: "#edfafd",
+            grey: "#949494",
         },
     };
 

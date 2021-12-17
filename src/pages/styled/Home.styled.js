@@ -7,7 +7,9 @@ export const Container = styled.div`
 
     display: flex;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: center;
+
+    background-color: ${({ theme }) => theme.mainColors.lightBlue};
 
     h1 {
         margin: 0px;
@@ -18,12 +20,12 @@ export const Container = styled.div`
         line-height: 85px;
 
         span {
-            font-style: italic;
+            color: ${({ theme }) => theme.mainColors.darkBlue};
         }
     }
 
     p {
-        color: #949494;
+        color: ${({ theme }) => theme.mainColors.grey};
         margin: 25px 0 45px 0;
 
         font-family: inherit;
@@ -36,15 +38,46 @@ export const Container = styled.div`
     }
 
     a {
-        color: #5b9cae;
+        color: ${({ theme }) => theme.mainColors.darkBlue};
         text-decoration: none;
+    }
+`;
+
+export const Centered = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+`;
+
+export const FormContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+
+    margin-bottom: 15px;
+
+    button {
+        margin-left: 15px;
+        border-radius: 6px;
+        border: none;
+        width: 10%;
+        background-color: ${({ theme }) => theme.mainColors.blue};
+
+        i {
+            font-size: 1.25rem;
+            color: black;
+        }
+    }
+
+    button:hover {
+        background-color: ${({ theme }) => theme.mainColors.darkBlue};
+        transition: background-color 0.3s;
     }
 `;
 
 export const FormGroup = styled.div`
     display: flex;
     width: 450px;
-    margin-bottom: 15px;
 
     & > span,
     .form-field {
@@ -79,15 +112,16 @@ export const FormGroup = styled.div`
         font-size: 1.25rem;
         line-height: 25px;
         color: #ffff;
-        background: #9fc5d0;
+        background: ${({ theme }) => theme.mainColors.blue};
         border: 2px solid transparent;
-        transition: background 0.3s ease, border 0.3s ease, color 0.3s ease;
+        transition: background-color 0.3s ease, border 0.3s ease,
+            color 0.3s ease;
     }
 
     &:focus-within {
         & > span {
-            background: #5b9cae;
-            border-color: #5b9cae;
+            background: ${({ theme }) => theme.mainColors.darkBlue};
+            border-color: ${({ theme }) => theme.mainColors.darkBlue};
         }
     }
 `;
@@ -102,18 +136,18 @@ export const FormField = styled.input`
     font-family: inherit;
     border-radius: 6px;
     -webkit-appearance: none;
-    color: #949494;
-    border: 2px solid #9fc5d0;
+    color: ${({ theme }) => theme.mainColors.grey};
+    border: 2px solid ${({ theme }) => theme.mainColors.blue};
     background: #ffff;
     transition: border 0.3s ease;
 
     &:focus {
         outline: none;
-        border-color: #5b9cae;
+        border-color: ${({ theme }) => theme.mainColors.darkBlue};
     }
 
     &::placeholder {
-        color: #949494;
+        color: ${({ theme }) => theme.mainColors.grey};
     }
 `;
 
