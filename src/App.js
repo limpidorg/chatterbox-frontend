@@ -4,6 +4,7 @@ import { Route, Switch } from "react-router-dom";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import WaitingRoom from "./pages/WaitingRoom";
+import "./index.css"
 
 function App() {
     const theme = {
