@@ -64,7 +64,7 @@ export const Container = styled.div`
         }
     }
 
-    navigation {
+    .navigation {
         display: block;
         color: ${({ theme }) => theme.mainColors.darkBlue};
         text-decoration: underline;

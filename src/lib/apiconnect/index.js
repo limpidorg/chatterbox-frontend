@@ -30,6 +30,19 @@ class APIConnection {
         })
         this.hooks = {};
         this.sessionId = null
+        this.history = null
+    }
+
+    async updateHistory(history) {
+        this.history = history
+    }
+
+    async navigate(path) {
+        if (this.history) {
+            this.history.push(path)
+        } else {
+            window.location.href = path
+        }
     }
 
     async attemptToResumeSession() {
@@ -45,7 +58,7 @@ class APIConnection {
                     title: "Yes",
                     type: "normal",
                     handler: () => {
-                        window.location.href = "/waiting-room"
+                        this.navigate(`/waiting-room`)
                     }
                 }
             ])

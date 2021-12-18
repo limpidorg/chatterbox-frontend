@@ -23,6 +23,7 @@ class Home extends React.Component {
             hasJoinedDiscord: true,
             loading: null
         }
+        Connection.updateHistory(props.history)
         Connection.attemptToResumeSession()
     }
 
@@ -39,12 +40,13 @@ class Home extends React.Component {
 
     handleSubmission() {
         this.setState({
-            loading: "Verifying your discord tag..."
+            loading: "Verifying your discord tag...",
+            hasJoinedDiscord: true
         })
 
         const { discord } = this.state
 
-        if (this.isDiscordTagInvalid === true) {
+        if (this.isDiscordTagInvalid() === true) {
             window.$alert.present("Invalid discord tag", "Please enter a valid discord tag.", [
                 {
                     title: "OK",
@@ -58,13 +60,13 @@ class Home extends React.Component {
             ], {
                 defaultAction: 0
             });
+            return
         }
 
         Connection.emit('discord-verification', {
             discordId: discord
-        }).then((res) => {
+        }).then(() => {
             this.setState({
-                hasJoinedDiscord: res.hasJoinedDiscord,
                 loading: "Starting a new session..."
             })
 
@@ -73,7 +75,7 @@ class Home extends React.Component {
                     loading: `Connecting to session ${sessionInfo.sessionId}`,
                 })
                 const { history } = this.props
-                history.replace("/waiting-room")
+                history.push("/waiting-room")
             }).catch(() => [
                 window.$alert.present("Error", "An error occured while starting a new session.", [
                     {
@@ -87,9 +89,42 @@ class Home extends React.Component {
                     }
                 ])
             ])
-        }).catch(() => [
-            window.$alert.present("Something went wrong", "Your discord tag does not seem to be valid. Please try again.")
-        ]).then(() => {
+        }).catch(() => {
+            this.setState({
+                hasJoinedDiscord: false
+            })
+
+            window.$alert.present("Our bot couldn't find you.", "Please ensure you have at least one common server with out bot.", [
+                {
+                    title: "OK",
+                    type: "normal",
+                    handler: () => {
+                        this.setState({
+                            loading: null
+                        })
+                    }
+                },
+                {
+                    title: "Invite the bot",
+                    type: "normal",
+                    handler: () => {
+                        window.open("https://discord.com/api/oauth2/authorize?client_id=921681984034598923&permissions=0&scope=bot")
+                        this.setState({
+                            loading: null
+                        })
+                    }
+                },
+                {
+                    title: "Continue without discord",
+                    type: "destructive",
+                    handler: () => {
+                        this.continueWithoutDiscord()
+                    }
+                }
+
+
+            ])
+        }).then(() => {
             this.setState({
                 loading: null
             })
@@ -106,6 +141,20 @@ class Home extends React.Component {
             return true;
         }
     };
+
+    continueWithoutDiscord() {
+        const { history } = this.props
+        this.setState({
+            loading: "Starting a new session..."
+        })
+        Connection.newSession().then((sessionInfo) => {
+            this.setState({
+                loading: `Connecting to session ${sessionInfo.sessionId}`
+            }, () => {
+                history.push("/waiting-room")
+            })
+        })
+    }
 
 
     render() {
@@ -170,34 +219,24 @@ class Home extends React.Component {
                                     >
                                         <i className="fas fa-angle-double-right" />
                                     </button>
-                                    {!hasJoinedDiscord && (
-                                        <a
-                                            href="/"
-                                            style={{
-                                                color: "red",
-                                                marginBottom: "10px",
-                                            }}
-                                        >
-                                            You must join our discord to make it work!
-                                        </a>
-                                    )}
                                 </FormContainer>
+                                {!hasJoinedDiscord && (
+                                    <div
+                                        href="/"
+                                        style={{
+                                            color: "red",
+                                            marginBottom: "10px",
+                                        }}
+                                    >
+                                        You must join our discord to make it work!
+                                    </div>
+                                )}
                                 <br />
-                                <navigation onClick={
+                                <div onClick={
                                     () => {
-                                        const { history } = this.props
-                                        this.setState({
-                                            loading: "Starting a new session..."
-                                        })
-                                        Connection.newSession().then((sessionInfo) => {
-                                            this.setState({
-                                                loading: `Connecting to session ${sessionInfo.sessionId}`
-                                            }, () => {
-                                                history.replace("/waiting-room")
-                                            })
-                                        })
+                                        this.continueWithoutDiscord()
                                     }
-                                } role="none">Continue without discord</navigation>
+                                } role="none" className="navigation">Continue without discord</div>
                             </div>
                         )}
                     </div>
