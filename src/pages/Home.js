@@ -11,7 +11,7 @@ import {
 const Home = () => {
     const [discord, setDiscord] = useState("");
     const [invalidDiscordTag, setInvalidDiscordTag] = useState(false);
-    const [hasJoinedDiscord, setHasJoinedDiscord] = true;
+    const [hasJoinedDiscord, setHasJoinedDiscord] = useState(true);
 
     const isDiscordTagInvalid = (value) => {
         if (value === "" || value.match(/^.+#[0-9]{4}$/) !== null) {
@@ -29,26 +29,28 @@ const Home = () => {
     };
 
     const handleSubmission = () => {
-        if (isDiscordTagInvalid(discord)) {
-            window.$alert.present(
-                "Your discord tag doesn't seem to be valid.",
-                "Please double check."
-            );
-        } else {
-            fetch("url", {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ discordTag: discord }),
-            })
-                .then((r) => r.json())
-                .then((json) => {
-                    setHasJoinedDiscord(json.hasJoinedDiscord);
-                    return 0;
-                });
-        }
+        console.log("hey");
+        setHasJoinedDiscord(false);
+        // if (isDiscordTagInvalid(discord)) {
+        //     window.$alert.present(
+        //         "Your discord tag doesn't seem to be valid.",
+        //         "Please double check."
+        //     );
+        // } else {
+        //     fetch("url", {
+        //         method: "POST",
+        //         headers: {
+        //             Accept: "application/json",
+        //             "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify({ discordTag: discord }),
+        //     })
+        //         .then((r) => r.json())
+        //         .then((json) => {
+        //             setHasJoinedDiscord(json.hasJoinedDiscord);
+        //             return 0;
+        //         });
+        // }
     };
     return (
         <Container>
