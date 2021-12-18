@@ -10,13 +10,27 @@ import {
 
 const Home = () => {
     const [discord, setDiscord] = useState("");
+    const [invalidDiscordTag, setInvalidDiscordTag] = useState(false);
+
+    const isDiscordTagInvalid = (value) => {
+        if (value === "" || value.match(/^.+#[0-9]{4}$/) !== null) {
+            return false
+        } else {
+            return true
+        }
+    }
 
     const handleChange = (ev) => {
-        setDiscord(ev.target.value);
+        const newValue = ev.target.value
+        setDiscord(newValue);
+        // Parse tag
+        setInvalidDiscordTag(isDiscordTagInvalid(newValue))
     };
 
-    const handleClick = () => {
-        console.log("clicked");
+    const handleSubmission = () => {
+        if(isDiscordTagInvalid(discord)) {
+            window.$alert.present("Your discord tag doesn't seem to be valid.", "Please double check.")
+        }
     };
     return (
         <Container>
@@ -46,10 +60,18 @@ const Home = () => {
                                 placeholder="Enter your discord tag"
                                 value={discord}
                                 onChange={handleChange}
+                                style={invalidDiscordTag ? { border: "2px solid red" } : {}}
+                                onKeyDown={(ev) => {
+                                    if (ev.key === "Enter") {
+                                        handleSubmission();
+                                    }
+                                }}
                             />
                         </FormGroup>
 
-                        <button type="button" onClick={handleClick}>
+                        <button type="button" onClick={handleSubmission} style={{
+                            cursor: "pointer",
+                        }}>
                             <i className="fas fa-angle-double-right" />
                         </button>
                     </FormContainer>
