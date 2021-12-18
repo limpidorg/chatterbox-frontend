@@ -1,11 +1,12 @@
 import React from "react";
 import { ThemeProvider } from "styled-components";
 import { Route, Switch } from "react-router-dom";
+import { Alert } from "./components/alert"
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import WaitingRoom from "./pages/WaitingRoom";
-import "./index.css";
-import Chatbox from "./pages/Chatbox";
+import Chatbox from "./pages/Chatbox"
+import "./index.css"
 
 function App() {
     const theme = {
@@ -16,11 +17,11 @@ function App() {
             grey: "#949494",
         },
     };
-
     // GOOGLE ANALYTICS
 
     return (
         <ThemeProvider theme={theme}>
+            <Alert />
             <Switch>
                 <Route exact path="/">
                     <Home />

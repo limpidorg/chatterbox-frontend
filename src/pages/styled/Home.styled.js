@@ -20,9 +20,9 @@ export const Container = styled.div`
         margin: 0px;
 
         font-family: inherit;
-        font-weight: medium;
+        font-weight: bold;
         font-size: 3.5rem;
-        line-height: 85px;
+        line-height: 60px;
 
         span {
             color: ${({ theme }) => theme.mainColors.darkBlue};

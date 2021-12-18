@@ -18,7 +18,6 @@ const Home = () => {
     const handleClick = () => {
         console.log("clicked");
     };
-
     return (
         <Container>
             <Centered>
