@@ -12,7 +12,8 @@ export class Alert extends React.Component {
             stackLevel: 0,
             developerMode: false,
             presentBlockTime: 100,
-            // dismissBlockTime: 100,
+            dismissBlockTime: 100,
+            alertAnimationStyles: {}
         };
         window.$alert = this
     }
@@ -142,7 +143,7 @@ export class Alert extends React.Component {
     async dismiss(_identifier = null, { immediately = false } = {}) {
         const prom = new Promise((resolve) => {
             const executeDismiss = () => {
-                const { alerts, alertStack, alertQueue } = this.state
+                const { alerts, alertStack, alertQueue, alertAnimationStyles } = this.state
 
                 let identifier = _identifier
                 if (_identifier === null) {
@@ -163,15 +164,32 @@ export class Alert extends React.Component {
                 const alertStackCopy = [...alertStack]
                 alertStackCopy.splice(alertStackCopy.indexOf(identifier), 1);
 
-                this.setState({
-                    alerts: alertsCopy,
-                    alertStack: alertStackCopy,
-                });
+                const newAlertAnimationStyles = { ...alertAnimationStyles }
+                newAlertAnimationStyles[identifier] = {
+                    opacity: 0,
+                    transition: "all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1)"
+                }
 
+                this.setState({
+                    // alerts: alertsCopy, // not updating immediately for the sack of animation
+                    alertStack: alertStackCopy,
+                    alertAnimationStyles: newAlertAnimationStyles
+                });
+                const { dismissBlockTime } = this.state
+                setTimeout(() => {
+                    // A seperate timeout is used so that the animation can be seen.
+                    this.setState({
+                        alerts: alertsCopy,
+                    })
+                    delete newAlertAnimationStyles[identifier]
+                    this.setState({
+                        alertAnimationStyles: newAlertAnimationStyles
+                    });
+                }, 300);
                 setTimeout(() => {
                     alertQueue.dequeue();
                     resolve(true);
-                }, 300);
+                }, dismissBlockTime);
 
 
                 // Checks if the stackLevel can be resetted.
@@ -220,6 +238,7 @@ export class Alert extends React.Component {
         const prom = new Promise((resolve) => {
             const identifier = Math.floor(Math.random() * 10000000);
             const executePresent = (() => {
+                const { presentBlockTime, alertAnimationStyles } = this.state
                 const actionsCopy = [...actions]
 
                 for (let i = 0; i < actionsCopy.length; i++) {
@@ -230,7 +249,7 @@ export class Alert extends React.Component {
                     }
                 }
 
-                const {stackLevel} = this.state
+                const { stackLevel } = this.state
                 const newStackLevel = stackLevel + 1;
 
                 const { alerts } = { ...this.state };
@@ -254,19 +273,33 @@ export class Alert extends React.Component {
                 const { alertStack } = this.state
                 const alertStackCopy = [...alertStack, identifier];
 
+                const newAlertAnimationStyles = { ...alertAnimationStyles };
+                newAlertAnimationStyles[identifier] = {
+                    opacity: 0,
+                    transform: "scale(1.2)",
+                    transition: "all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1)"
+                }
+
                 this.setState({
                     alerts: alertsCopy,
                     stackLevel: newStackLevel,
                     alertStack: alertStackCopy,
+                    alertAnimationStyles: newAlertAnimationStyles,
                 })
-                const { presentBlockTime } = this.state
+                setTimeout(() => {
+                    // A seperate timeout is used so that the animation can be seen.
+                    delete newAlertAnimationStyles[identifier]
+                    // Finally, remove the style
+                    this.setState({
+                        alertAnimationStyles: newAlertAnimationStyles
+                    })
+                }, 300);
+
                 setTimeout((() => {
                     const { alertQueue } = this.state
                     alertQueue.dequeue();
                     resolve(identifier);
                 }), presentBlockTime);
-                console.log(newStackLevel)
- 
 
             })
             if (immediately) {
@@ -293,9 +326,11 @@ export class Alert extends React.Component {
                 Object.entries(alerts).map((entry) => {
                     const identifier = entry[0]
                     const alert = entry[1]
+                    const { alertAnimationStyles } = this.state
                     return (
                         <div key={identifier} style={{
                             zIndex: 100000000 + (alert.stackLevel ? alert.stackLevel : 0),
+                            ...(alertAnimationStyles[identifier] ?? {})
                         }} className="alert-transition alert-shadow" >
                             <div className="alert-contentbox">
                                 <div className="alert-content">
