@@ -27,8 +27,7 @@ const Home = () => {
         })
             .then((r) => r.json())
             .then((json) => {
-                console.log(json.hasJoinedDiscord);
-                setHasJoinedDiscord(hasJoinedDiscord);
+                setHasJoinedDiscord(json.hasJoinedDiscord);
                 return 0;
             });
     };
