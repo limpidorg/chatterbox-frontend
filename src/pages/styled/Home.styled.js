@@ -101,7 +101,7 @@ export const FormContainer = styled.div`
 
         i {
             font-size: 1.25rem;
-            color: black;
+            color: white;
         }
     }
 
