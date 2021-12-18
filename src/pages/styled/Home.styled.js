@@ -64,10 +64,11 @@ export const Container = styled.div`
         }
     }
 
-    a {
+    navigation {
         display: block;
         color: ${({ theme }) => theme.mainColors.darkBlue};
         text-decoration: underline;
+        cursor: pointer;
     }
 `;
 
