@@ -9,6 +9,11 @@ export const Container = styled.div`
     align-items: center;
     justify-content: center;
 
+    @media screen and (max-width: 850px) and (orientation: landscape) {
+        display: block;
+        padding-top: 15px;
+    }
+
     background-color: ${({ theme }) => theme.mainColors.lightBlue};
 
     h1 {
@@ -16,11 +21,25 @@ export const Container = styled.div`
 
         font-family: inherit;
         font-weight: medium;
-        font-size: 4rem;
+        font-size: 3.5rem;
         line-height: 85px;
 
         span {
             color: ${({ theme }) => theme.mainColors.darkBlue};
+        }
+
+        @media screen and (min-width: 768px) and (max-width: 1024px) {
+            font-size: 3.5rem;
+        }
+
+        @media screen and (max-width: 767px) {
+            line-height: 60px;
+            font-size: 2.25rem;
+        }
+
+        @media screen and (max-width: 900px) and (orientation: landscape) {
+            line-height: 50px;
+            font-size: 2.25rem;
         }
     }
 
@@ -30,10 +49,18 @@ export const Container = styled.div`
 
         font-family: inherit;
         font-weight: normal;
-        font-size: 1.5rem;
+        font-size: 1.25rem;
 
         span {
             font-style: italic;
+        }
+
+        @media screen and (min-width: 768px) and (max-width: 1024px) {
+            font-size: 1rem;
+        }
+
+        @media screen and (max-width: 850px) and (orientation: landscape) {
+            margin: 25px 0 25px 0;
         }
     }
 
@@ -48,6 +75,10 @@ export const Centered = styled.div`
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+
+    @media screen and (max-width: 1024px) {
+        flex-direction: column;
+    }
 `;
 
 export const FormContainer = styled.div`
@@ -61,6 +92,11 @@ export const FormContainer = styled.div`
         border-radius: 6px;
         border: none;
         width: 10%;
+
+        @media screen and (max-width: 767px) {
+            width: 20%;
+        }
+
         background-color: ${({ theme }) => theme.mainColors.blue};
 
         i {
@@ -78,6 +114,10 @@ export const FormContainer = styled.div`
 export const FormGroup = styled.div`
     display: flex;
     width: 450px;
+
+    @media screen and (max-width: 767px) {
+        width: 275px;
+    }
 
     & > span,
     .form-field {
@@ -132,6 +172,11 @@ export const FormField = styled.input`
     padding: 8px 16px;
     line-height: 25px;
     font-size: 1.25rem;
+
+    @media screen and (max-width: 767px) {
+        font-size: 1rem;
+    }
+
     font-weight: 500;
     font-family: inherit;
     border-radius: 6px;
@@ -152,5 +197,21 @@ export const FormField = styled.input`
 `;
 
 export const Illustration = styled.img`
-    height: 725px;
+    height: 625px;
+
+    @media screen and (min-width: 768px) and (max-width: 1024px) {
+        height: 550px;
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1024px) {
+        height: 550px;
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+        height: 0px;
+    }
+
+    @media screen and (max-width: 767px) {
+        height: 0px;
+    }
 `;
