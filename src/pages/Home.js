@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Connection } from "../lib/apiconnect"
+
 import {
     Centered,
     Container,
@@ -29,28 +31,11 @@ const Home = () => {
     };
 
     const handleSubmission = () => {
-        console.log("hey");
-        setHasJoinedDiscord(false);
-        // if (isDiscordTagInvalid(discord)) {
-        //     window.$alert.present(
-        //         "Your discord tag doesn't seem to be valid.",
-        //         "Please double check."
-        //     );
-        // } else {
-        //     fetch("url", {
-        //         method: "POST",
-        //         headers: {
-        //             Accept: "application/json",
-        //             "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify({ discordTag: discord }),
-        //     })
-        //         .then((r) => r.json())
-        //         .then((json) => {
-        //             setHasJoinedDiscord(json.hasJoinedDiscord);
-        //             return 0;
-        //         });
-        // }
+        Connection.emit('discord-verification', {
+            discordId: discord
+        }).then((res)=>{
+            setHasJoinedDiscord(res.hasJoinedDiscord);
+        })
     };
     return (
         <Container>
