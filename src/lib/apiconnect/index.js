@@ -10,7 +10,7 @@ function retrieveSessionId() {
 }
 
 class APIConnection {
-    constructor({ APIEndpoint = "http://lincolns-imac.local:5051" } = {}) {
+    constructor({ APIEndpoint = "http://localhost:5051" } = {}) {
         this.APIEndpoint = APIEndpoint;
         this.socket = io(this.APIEndpoint);
         // Set up message handler
