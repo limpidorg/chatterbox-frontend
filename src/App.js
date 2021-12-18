@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import WaitingRoom from "./pages/WaitingRoom";
 import "./index.css";
+import Chatbox from "./pages/Chatbox";
 
 function App() {
     const theme = {
@@ -27,6 +28,10 @@ function App() {
 
                 <Route exact path="/waiting-room">
                     <WaitingRoom />
+                </Route>
+
+                <Route exact path="/chatbox">
+                    <Chatbox />
                 </Route>
 
                 <Route>

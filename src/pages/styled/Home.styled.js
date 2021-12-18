@@ -199,14 +199,6 @@ export const FormField = styled.input`
 export const Illustration = styled.img`
     height: 625px;
 
-    @media screen and (min-width: 768px) and (max-width: 1174px) {
-        height: 550px;
-    }
-
-    @media screen and (min-width: 768px) and (max-width: 1174px) {
-        height: 550px;
-    }
-
     @media screen and (min-width: 768px) and (max-width: 1174px) and (orientation: landscape) {
         height: 0px;
     }
