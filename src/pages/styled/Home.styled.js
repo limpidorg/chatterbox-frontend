@@ -28,7 +28,7 @@ export const Container = styled.div`
             color: ${({ theme }) => theme.mainColors.darkBlue};
         }
 
-        @media screen and (min-width: 768px) and (max-width: 1024px) {
+        @media screen and (min-width: 768px) and (max-width: 1174px) {
             font-size: 3.5rem;
         }
 
@@ -55,7 +55,7 @@ export const Container = styled.div`
             font-style: italic;
         }
 
-        @media screen and (min-width: 768px) and (max-width: 1024px) {
+        @media screen and (min-width: 768px) and (max-width: 1174px) {
             font-size: 1rem;
         }
 
@@ -76,7 +76,7 @@ export const Centered = styled.div`
     justify-content: space-evenly;
     align-items: center;
 
-    @media screen and (max-width: 1024px) {
+    @media screen and (max-width: 1174px) {
         flex-direction: column;
     }
 `;
@@ -199,15 +199,15 @@ export const FormField = styled.input`
 export const Illustration = styled.img`
     height: 625px;
 
-    @media screen and (min-width: 768px) and (max-width: 1024px) {
+    @media screen and (min-width: 768px) and (max-width: 1174px) {
         height: 550px;
     }
 
-    @media screen and (min-width: 768px) and (max-width: 1024px) {
+    @media screen and (min-width: 768px) and (max-width: 1174px) {
         height: 550px;
     }
 
-    @media screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    @media screen and (min-width: 768px) and (max-width: 1174px) and (orientation: landscape) {
         height: 0px;
     }
 
