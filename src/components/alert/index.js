@@ -20,46 +20,7 @@ export class Alert extends React.Component {
 
 
     componentDidMount() {
-        window.addEventListener(
-            "keydown",
-            (event) => {
-                const { alerts, alertStack } = this.state
-                if (Object.keys(alerts).length !== 0) {
-                    const currentAlert =
-                        alerts[alertStack[alertStack.length - 1]];
-                    if (
-                        event.keyCode === 13 &&
-                        event.ctrlKey === false &&
-                        event.altKey === false &&
-                        event.shiftKey === false
-                    ) {
-                        // Trigger default action
-                        if (currentAlert.defaultAction != null) {
-                            this.handlerProxy(
-                                currentAlert.identifier,
-                                currentAlert.defaultAction
-                            );
-                        }
-                        event.preventDefault();
-                        return false;
-                    } else if (
-                        event.keyCode === 27 &&
-                        event.ctrlKey === false &&
-                        event.altKey === false &&
-                        event.shiftKey === false
-                    ) {
-                        const cancelIndex = currentAlert.defaultEscapeAction;
-                        if (cancelIndex !== null) {
-                            this.handlerProxy(currentAlert.identifier, cancelIndex);
-                        }
-                    } else if (currentAlert.preventKeyboard === true) {
-                        event.preventDefault();
-                        return false;
-                    }
-                }
-                return true
-            }
-        );
+
     }
 
     handlerProxy(identifier, actionIndex) {
