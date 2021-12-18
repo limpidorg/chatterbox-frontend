@@ -11,25 +11,43 @@ import {
 const Home = () => {
     const [discord, setDiscord] = useState("");
     const [invalidDiscordTag, setInvalidDiscordTag] = useState(false);
+    const [hasJoinedDiscord, setHasJoinedDiscord] = true;
 
     const isDiscordTagInvalid = (value) => {
         if (value === "" || value.match(/^.+#[0-9]{4}$/) !== null) {
-            return false
+            return false;
         } else {
-            return true
+            return true;
         }
-    }
+    };
 
     const handleChange = (ev) => {
-        const newValue = ev.target.value
+        const newValue = ev.target.value;
         setDiscord(newValue);
         // Parse tag
-        setInvalidDiscordTag(isDiscordTagInvalid(newValue))
+        setInvalidDiscordTag(isDiscordTagInvalid(newValue));
     };
 
     const handleSubmission = () => {
-        if(isDiscordTagInvalid(discord)) {
-            window.$alert.present("Your discord tag doesn't seem to be valid.", "Please double check.")
+        if (isDiscordTagInvalid(discord)) {
+            window.$alert.present(
+                "Your discord tag doesn't seem to be valid.",
+                "Please double check."
+            );
+        } else {
+            fetch("url", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ discordTag: discord }),
+            })
+                .then((r) => r.json())
+                .then((json) => {
+                    setHasJoinedDiscord(json.hasJoinedDiscord);
+                    return 0;
+                });
         }
     };
     return (
@@ -60,7 +78,11 @@ const Home = () => {
                                 placeholder="Enter your discord tag"
                                 value={discord}
                                 onChange={handleChange}
-                                style={invalidDiscordTag ? { border: "2px solid red" } : {}}
+                                style={
+                                    invalidDiscordTag
+                                        ? { border: "2px solid red" }
+                                        : {}
+                                }
                                 onKeyDown={(ev) => {
                                     if (ev.key === "Enter") {
                                         handleSubmission();
@@ -69,13 +91,29 @@ const Home = () => {
                             />
                         </FormGroup>
 
-                        <button type="button" onClick={handleSubmission} style={{
-                            cursor: "pointer",
-                        }}>
+                        <button
+                            type="button"
+                            onClick={handleSubmission}
+                            style={{
+                                cursor: "pointer",
+                            }}
+                        >
                             <i className="fas fa-angle-double-right" />
                         </button>
                     </FormContainer>
 
+                    {!hasJoinedDiscord && (
+                        <a
+                            href="/"
+                            style={{
+                                color: "red",
+                                marginBottom: "10px",
+                            }}
+                        >
+                            You must join our discord to make it work!
+                        </a>
+                    )}
+                    <br />
                     <a href="/">Continue without discord</a>
                 </div>
 

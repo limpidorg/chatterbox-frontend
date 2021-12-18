@@ -65,8 +65,9 @@ export const Container = styled.div`
     }
 
     a {
+        display: block;
         color: ${({ theme }) => theme.mainColors.darkBlue};
-        text-decoration: none;
+        text-decoration: underline;
     }
 `;
 
@@ -84,8 +85,6 @@ export const Centered = styled.div`
 export const FormContainer = styled.div`
     display: flex;
     flex-direction: row;
-
-    margin-bottom: 15px;
 
     button {
         margin-left: 15px;
