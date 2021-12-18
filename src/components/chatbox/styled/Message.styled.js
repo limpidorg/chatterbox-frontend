@@ -9,10 +9,11 @@ export const Container = styled.div`
 export const Row = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: center;
     align-items: center;
 
-    margin: 0 15px 0 15px;
+    width: 100%;
+
+    margin: 0 25px 0 25px;
 
     img {
         width: 40px;
@@ -24,6 +25,12 @@ export const Row = styled.div`
         margin: 15px;
         padding: 10px;
         border-radius: 4px;
-        max-width: 60%;
+        width: max-content;
+        word-break: break-word;
+        line-break: loose;
+        max-width: 50%;
+        font-family: inherit;
+        margin-left: auto;
+        margin-right: auto;
     }
 `;

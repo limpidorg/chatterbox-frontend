@@ -1,11 +1,11 @@
 import React from "react";
 import { Container, Row } from "./styled/Message.styled";
 
-const Message = ({ isUser1, avatarPath, children }) => {
+const Message = ({ self, avatarPath, children }) => {
     return (
         <Container>
-            <Row style={{ float: `${isUser1 ? "left" : "right"}` }}>
-                {isUser1 && (
+            <Row style={{ float: `${self ? "left" : "right"}`, justifyContent: `${self ? "left" : "right"}` }}>
+                {self && (
                     <>
                         <img src={avatarPath} alt="profile" />
                         <p
@@ -19,7 +19,7 @@ const Message = ({ isUser1, avatarPath, children }) => {
                         </p>
                     </>
                 )}
-                {!isUser1 && (
+                {!self && (
                     <>
                         <p
                             style={{
