@@ -123,9 +123,10 @@ class APIConnection {
         return sessionResponse.sessionInfo;
     }
 
-    async newSession(discordId) {
+    async newSession(discordId, name) {
         const sessionResponse = await this.emit("new-session", {
             discordId: discordId || null,
+            name: name || null,
         });
         this.sessionInfo = sessionResponse.sessionInfo;
         storeSessionId(this.sessionInfo.sessionId);
