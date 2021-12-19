@@ -95,11 +95,16 @@ export const FormContainer = styled.div`
         color: white;
     }
 
+    .inputs {
+        display: flex;
+        flex-direction: column;
+    }
+
     button {
         margin-left: 15px;
         border-radius: 6px;
         border: none;
-        width: 10%;
+        width: 12%;
 
         @media screen and (max-width: 767px) {
             width: 20%;
@@ -121,14 +126,14 @@ export const FormContainer = styled.div`
 
 export const FormGroup = styled.div`
     display: flex;
-    width: 450px;
-
+    width: 425px;
     @media screen and (max-width: 767px) {
         width: 275px;
     }
 
     & > span,
     .form-field {
+        width: 25px;
         white-space: nowrap;
         display: block;
         &:not(:first-child):not(:last-child) {

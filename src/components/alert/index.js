@@ -1,6 +1,6 @@
 import React from "react";
-import "./index.css"
-import { Queue } from "./queue"
+import "./index.css";
+import { Queue } from "./queue";
 
 export class Alert extends React.Component {
     constructor(props) {
@@ -12,18 +12,15 @@ export class Alert extends React.Component {
             stackLevel: 0,
             developerMode: false,
             presentBlockTime: 100,
-            dismissBlockTime: 0
+            dismissBlockTime: 0,
         };
-        window.$alert = this
+        window.$alert = this;
     }
 
-
-    componentDidMount() {
-
-    }
+    componentDidMount() {}
 
     handlerProxy(identifier, actionIndex) {
-        const { alerts } = this.state
+        const { alerts } = this.state;
         const currentAlert = alerts[identifier];
         if (!currentAlert) {
             return;
@@ -38,7 +35,7 @@ export class Alert extends React.Component {
             currentAlert.actions[actionIndex].handler,
             identifier,
             actionIndex
-        ).then((dismiss) => {
+        ).then(dismiss => {
             if (dismiss === false) {
                 currentAlert.preventHandlerCalls = false;
                 return;
@@ -52,7 +49,6 @@ export class Alert extends React.Component {
         });
     }
 
-
     getActionStyleClassess(type, identifier, actionIndex) {
         const ActionStyles = {
             normal: ["normal"],
@@ -60,7 +56,7 @@ export class Alert extends React.Component {
             destructive: ["destructive"],
         };
         const classess = ActionStyles[type];
-        const { alerts } = this.state
+        const { alerts } = this.state;
         if (alerts[identifier].defaultAction === actionIndex) {
             classess.push("defaultAction");
         } else {
@@ -69,9 +65,8 @@ export class Alert extends React.Component {
         return classess.join(" ");
     }
 
-
     getCancelAction(actions) {
-        this.doNothing()
+        this.doNothing();
         let decidedAction = null;
         for (let actionIndex = 0; actionIndex < actions.length; actionIndex++) {
             if (actions[actionIndex].type === "cancel") {
@@ -85,7 +80,7 @@ export class Alert extends React.Component {
     async asyncCall(fx, ...args) {
         return (async () => {
             return fx(...args); // Will resolve immediately if the function is not async, or otherwise will resolve when the async function resolves.
-        })().catch((e) => {
+        })().catch(e => {
             // Using this method so that that fx is wrapped with an async function and its error is always handled within this function.
             if (this.developerMode) {
                 this.present(
@@ -101,11 +96,11 @@ export class Alert extends React.Component {
     }
 
     async dismiss(_identifier = null, { immediately = false } = {}) {
-        const prom = new Promise((resolve) => {
+        const prom = new Promise(resolve => {
             const executeDismiss = () => {
-                const { alerts, alertStack, alertQueue } = this.state
+                const { alerts, alertStack, alertQueue } = this.state;
 
-                let identifier = _identifier
+                let identifier = _identifier;
                 if (_identifier === null) {
                     identifier = alertStack[alertStack.length - 1]; // Defaults to the last alert
                 }
@@ -118,35 +113,34 @@ export class Alert extends React.Component {
 
                 identifier = parseInt(identifier, 10);
 
-                const alertsCopy = { ...alerts }
-                delete alertsCopy[identifier]
+                const alertsCopy = { ...alerts };
+                delete alertsCopy[identifier];
 
-                const alertStackCopy = [...alertStack]
+                const alertStackCopy = [...alertStack];
                 alertStackCopy.splice(alertStackCopy.indexOf(identifier), 1);
 
                 this.setState({
                     // alerts: alertsCopy, // not updating immediately for the sack of animation
-                    alertStack: alertStackCopy
+                    alertStack: alertStackCopy,
                 });
-                const { dismissBlockTime } = this.state
+                const { dismissBlockTime } = this.state;
                 this.setState({
                     alerts: alertsCopy,
-                })
+                });
                 setTimeout(() => {
                     alertQueue.dequeue();
                     resolve(true);
                 }, dismissBlockTime);
 
-
                 // Checks if the stackLevel can be resetted.
                 if (Object.keys(alerts).length === 0) {
                     // Resets the stackLevel when there is no more active alerts
                     this.setState({
-                        stackLevel: 0
-                    })
+                        stackLevel: 0,
+                    });
                 }
             };
-            const { alertQueue } = this.state
+            const { alertQueue } = this.state;
             if (immediately) {
                 // executeDismiss(); Not supported in React
                 alertQueue.queue(executeDismiss, immediately);
@@ -159,10 +153,8 @@ export class Alert extends React.Component {
 
     dismissInline(identifier) {
         // When the user chooses to dismiss the alert, we want to do so immediately.
-        this.dismiss(identifier, { immediately: true })
+        this.dismiss(identifier, { immediately: true });
     }
-
-
 
     async present(
         title,
@@ -183,11 +175,11 @@ export class Alert extends React.Component {
             immediately = false,
         } = {}
     ) {
-        const prom = new Promise((resolve) => {
+        const prom = new Promise(resolve => {
             const identifier = Math.floor(Math.random() * 10000000);
-            const executePresent = (() => {
-                const { presentBlockTime } = this.state
-                const actionsCopy = [...actions]
+            const executePresent = () => {
+                const { presentBlockTime } = this.state;
+                const actionsCopy = [...actions];
 
                 for (let i = 0; i < actionsCopy.length; i++) {
                     if (actionsCopy[i].type === "cancel") {
@@ -197,7 +189,7 @@ export class Alert extends React.Component {
                     }
                 }
 
-                const { stackLevel } = this.state
+                const { stackLevel } = this.state;
                 const newStackLevel = stackLevel + 1;
 
                 const { alerts } = { ...this.state };
@@ -212,13 +204,14 @@ export class Alert extends React.Component {
                         defaultAction != null
                             ? defaultAction
                             : this.getCancelAction(actions),
-                    defaultEscapeAction: (defaultEscapeAction || this.getCancelAction(actions)),
+                    defaultEscapeAction:
+                        defaultEscapeAction || this.getCancelAction(actions),
                     preventKeyboard,
                     preventHandlerCalls: false,
                     allowMultipleClicks,
-                }
+                };
 
-                const { alertStack } = this.state
+                const { alertStack } = this.state;
                 const alertStackCopy = [...alertStack, identifier];
 
                 // const newAlertAnimationStyles = { ...alertAnimationStyles };
@@ -233,7 +226,7 @@ export class Alert extends React.Component {
                     stackLevel: newStackLevel,
                     alertStack: alertStackCopy,
                     // alertAnimationStyles: newAlertAnimationStyles,
-                })
+                });
                 // setTimeout(() => {
                 //     // A seperate timeout is used so that the animation can be seen.
                 //     delete newAlertAnimationStyles[identifier]
@@ -243,14 +236,13 @@ export class Alert extends React.Component {
                 //     })
                 // }, 300);
 
-                setTimeout((() => {
-                    const { alertQueue } = this.state
+                setTimeout(() => {
+                    const { alertQueue } = this.state;
                     alertQueue.dequeue();
                     resolve(identifier);
-                }), presentBlockTime);
-
-            })
-            const { alertQueue } = this.state
+                }, presentBlockTime);
+            };
+            const { alertQueue } = this.state;
             if (immediately) {
                 // executePresent(); Not supported in React
                 alertQueue.queue(executePresent);
@@ -263,62 +255,107 @@ export class Alert extends React.Component {
 
     doNothing() {
         // Do nothing
-        (() => { })(this)
+        (() => {})(this);
     }
 
-
-
     render() {
-        const { alerts } = this.state
+        const { alerts } = this.state;
         return (
-            <div> {
-                Object.entries(alerts).map((entry) => {
-                    const identifier = entry[0]
-                    const alert = entry[1]
+            <div>
+                {" "}
+                {Object.entries(alerts).map(entry => {
+                    const identifier = entry[0];
+                    const alert = entry[1];
                     return (
-                        <div key={identifier} style={{
-                            zIndex: 100000000 + (alert.stackLevel ? alert.stackLevel : 0),
-                        }} className="alert-transition alert-shadow" >
+                        <div
+                            key={identifier}
+                            style={{
+                                zIndex:
+                                    100000000 +
+                                    (alert.stackLevel ? alert.stackLevel : 0),
+                            }}
+                            className="alert-transition alert-shadow"
+                        >
                             <div className="alert-contentbox">
                                 <div className="alert-content">
                                     <div className="alert-title-message">
-                                        <div className="alert-title">{alert.title}</div>
-                                        <div className="alert-message">{alert.message}</div>
+                                        <div className="alert-title">
+                                            {alert.title}
+                                        </div>
+                                        <div className="alert-message">
+                                            {alert.message}
+                                        </div>
                                     </div>
-                                    <div className="alert-actions" style={alert.actions.length === 2 ? {
-                                        flexDirection: "row",
-                                        justifyContent: "space-evenly",
-                                        flexWrap: "wrap"
-                                    } : {
-                                        flexDirection: "column",
-                                    }}>
+                                    <div
+                                        className="alert-actions"
+                                        style={
+                                            alert.actions.length === 2
+                                                ? {
+                                                      flexDirection: "row",
+                                                      justifyContent:
+                                                          "space-evenly",
+                                                      flexWrap: "wrap",
+                                                  }
+                                                : {
+                                                      flexDirection: "column",
+                                                  }
+                                        }
+                                    >
                                         {alert.actions.map((action, index) => {
                                             return (
-                                                <div className="alert-action" key={index} style={
-                                                    (index === alert.actions.length - 1 && alert.actions.length !== 2) ? {
-                                                        borderRadius: "0 0 1em 1em"
-                                                    } : {}
-                                                }>
-                                                    <div className={`alert-action-inner ${this.getActionStyleClassess(action.type, identifier, index)}`} style={(alert.actions.length === 2) ? { borderLeft: '0.1px solid rgba(0,0,0,0.1)' } : {}} onClick={() => {
-                                                        this.handlerProxy(identifier, index)
-                                                    }} role="none" onKeyDown={() => { }}>
+                                                <div
+                                                    className="alert-action"
+                                                    key={index}
+                                                    style={
+                                                        index ===
+                                                            alert.actions
+                                                                .length -
+                                                                1 &&
+                                                        alert.actions.length !==
+                                                            2
+                                                            ? {
+                                                                  borderRadius:
+                                                                      "0 0 1em 1em",
+                                                              }
+                                                            : {}
+                                                    }
+                                                >
+                                                    <div
+                                                        className={`alert-action-inner ${this.getActionStyleClassess(
+                                                            action.type,
+                                                            identifier,
+                                                            index
+                                                        )}`}
+                                                        style={
+                                                            alert.actions
+                                                                .length === 2
+                                                                ? {
+                                                                      borderLeft:
+                                                                          "0.1px solid rgba(0,0,0,0.1)",
+                                                                  }
+                                                                : {}
+                                                        }
+                                                        onClick={() => {
+                                                            this.handlerProxy(
+                                                                identifier,
+                                                                index
+                                                            );
+                                                        }}
+                                                        role="none"
+                                                        onKeyDown={() => {}}
+                                                    >
                                                         {action.title}
                                                     </div>
-
                                                 </div>
-                                            )
+                                            );
                                         })}
-
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
-                    )
-                })
-            } </div>
+                    );
+                })}{" "}
+            </div>
         );
     }
-
 }

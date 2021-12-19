@@ -17,6 +17,7 @@ class Home extends React.Component {
         super(props);
         this.state = {
             discord: "",
+            username: "",
             invalidDiscordTag: false,
             hasJoinedDiscord: true,
             loading: "Loading your session...",
@@ -38,7 +39,7 @@ class Home extends React.Component {
         })
     }
 
-    handleChange(ev) {
+    handleDiscordChange(ev) {
         const newValue = ev.target.value;
         this.setState(
             {
@@ -48,6 +49,15 @@ class Home extends React.Component {
                 this.setState({
                     invalidDiscordTag: this.isDiscordTagInvalid(),
                 });
+            }
+        );
+    }
+
+    handleUsernameChange(ev) {
+        const newValue = ev.target.value;
+        this.setState(
+            {
+                username: newValue,
             }
         );
     }
@@ -190,6 +200,7 @@ class Home extends React.Component {
     render() {
         const {
             discord,
+            username,
             invalidDiscordTag,
             hasJoinedDiscord,
             loading,
@@ -256,38 +267,70 @@ class Home extends React.Component {
                                     )}
                                     {!isLoggedIn && (
                                         <>
-                                            <FormGroup>
-                                                <span>
-                                                    <i className="fab fa-discord" />
-                                                </span>
-                                                <FormField
-                                                    className="form-field"
-                                                    type="text"
-                                                    maxLength={40}
-                                                    placeholder="Enter your discord tag"
-                                                    value={discord}
-                                                    onChange={(event) => {
-                                                        this.handleChange(
-                                                            event
-                                                        );
+                                            <div className="inputs">
+                                                <FormGroup
+                                                    style={{
+                                                        marginBottom: "20px",
                                                     }}
-                                                    style={
-                                                        invalidDiscordTag
-                                                            ? {
-                                                                border:
-                                                                    "2px solid red",
-                                                            }
-                                                            : {}
-                                                    }
-                                                    onKeyDown={(ev) => {
-                                                        if (
-                                                            ev.key === "Enter"
-                                                        ) {
-                                                            this.handleSubmission();
+                                                >
+                                                    <span>
+                                                        <i className="fab fa-discord" />
+                                                    </span>
+                                                    <FormField
+                                                        className="form-field"
+                                                        type="text"
+                                                        maxLength={40}
+                                                        placeholder="Enter your discord tag"
+                                                        value={discord}
+                                                        onChange={(event) => {
+                                                            this.handleDiscordChange(
+                                                                event
+                                                            );
+                                                        }}
+                                                        style={
+                                                            invalidDiscordTag
+                                                                ? {
+                                                                      border:
+                                                                          "2px solid red",
+                                                                  }
+                                                                : {}
                                                         }
-                                                    }}
-                                                />
-                                            </FormGroup>
+                                                        onKeyDown={(ev) => {
+                                                            if (
+                                                                ev.key ===
+                                                                "Enter"
+                                                            ) {
+                                                                this.handleSubmission();
+                                                            }
+                                                        }}
+                                                    />
+                                                </FormGroup>
+                                                <FormGroup>
+                                                    <span>
+                                                        <i className="fas fa-user" />
+                                                    </span>
+                                                    <FormField
+                                                        className="form-field"
+                                                        type="text"
+                                                        maxLength={40}
+                                                        placeholder="Enter your username"
+                                                        value={username}
+                                                        onChange={(event) => {
+                                                            this.handleUsernameChange(
+                                                                event
+                                                            );
+                                                        }}
+                                                        onKeyDown={(ev) => {
+                                                            if (
+                                                                ev.key ===
+                                                                "Enter"
+                                                            ) {
+                                                                this.handleSubmission();
+                                                            }
+                                                        }}
+                                                    />
+                                                </FormGroup>
+                                            </div>
 
                                             <button
                                                 type="button"

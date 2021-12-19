@@ -1,13 +1,18 @@
 import React from "react";
 import { Container, Row } from "./styled/Message.styled";
 
-const Message = ({ self, avatarPath, children }) => {
+const Message = ({ self, avatarPath, avatar, children }) => {
     return (
         <Container>
-            <Row style={{ float: `${self ? "left" : "right"}`, justifyContent: `${self ? "left" : "right"}` }}>
+            <Row
+                style={{
+                    float: `${self ? "left" : "right"}`,
+                    justifyContent: `${self ? "left" : "right"}`,
+                }}
+            >
                 {self && (
                     <>
-                        <img src={avatarPath} alt="profile" />
+                        <div className="avatar">{avatar}</div>
                         <p
                             style={{
                                 backgroundColor: "rgba(148, 148, 148, 0.5)",

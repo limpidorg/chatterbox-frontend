@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
 import { Particles } from "react-tsparticles";
+import multiavatar from "@multiavatar/multiavatar";
 import {
     ActionBar,
     Box,
@@ -136,7 +137,10 @@ const Chatbox = () => {
         ])
     };
 
-    const avatarPath = `${process.env.PUBLIC_URL}/images/avatar.png`;
+    const avatar1 = multiavatar("Binx Bond");
+    const avatar2 = multiavatar("Binx Bond");
+
+    console.log(avatar1);
 
     const date = new Date();
 
@@ -292,6 +296,12 @@ const Chatbox = () => {
                                 return (
                                     <Message
                                         key={el.messageId}
+                                        avatar={
+                                            el.sessionId !==
+                                            Connection.sessionId
+                                                ? avatar1
+                                                : avatar2
+                                        }
                                         self={
                                             el.sessionId !==
                                             Connection.sessionId

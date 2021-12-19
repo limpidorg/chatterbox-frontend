@@ -16,7 +16,7 @@ const DrawingArea = ({ clearLines }) => {
         .toString(16)
         .padStart(6, "0")}`;
 
-    const handleMouseDown = (e) => {
+    const handleMouseDown = e => {
         isDrawing.current = true;
         const pos = e.target.getStage().getPointerPosition();
         setLines([
@@ -25,7 +25,7 @@ const DrawingArea = ({ clearLines }) => {
         ]);
     };
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = e => {
         if (!isDrawing.current) {
             return;
         }

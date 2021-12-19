@@ -18,10 +18,10 @@ class APIConnection {
         this.postConnectionHooks = [];
         this.postConnectionOnce = [];
         // Set up message handler
-        this.socket.on("message", (data) => {
+        this.socket.on("message", data => {
             // Sends ACK (i.e. Delivered)
             if (this.hooks.onNewMessage !== undefined) {
-                this.hooks.onNewMessage.forEach((handler) => {
+                this.hooks.onNewMessage.forEach(handler => {
                     handler(data);
                 });
             }
@@ -144,7 +144,7 @@ class APIConnection {
             }
 
             const emitToSocket = () => {
-                this.socket.emit(event, sendData, (response) => {
+                this.socket.emit(event, sendData, response => {
                     if (response) {
                         if (response.code < 0) {
                             reject(response);
@@ -171,7 +171,7 @@ class APIConnection {
     }
 
     on(event, callback) {
-        this.socket.on(event, (data) => {
+        this.socket.on(event, data => {
             callback(data); // Process data here
         });
         this.postConnectionHooks.push(() => {

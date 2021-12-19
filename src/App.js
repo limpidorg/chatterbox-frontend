@@ -33,15 +33,13 @@ function App() {
         // }
 
         Connection.on("session-destroyed", () => {
-            history.replace('/')
+            history.replace("/");
             window.$alert.present(
                 "Your session has been destroyed",
                 "Please create a new session."
-            )
-        })
+            );
+        });
     }, []);
-
-
 
     return (
         <ThemeProvider theme={theme}>
