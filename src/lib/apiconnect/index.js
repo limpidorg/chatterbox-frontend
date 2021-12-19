@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 
-const DEVELOPER_MODE_NO_REDIRECT = false
+const DEVELOPER_MODE_NO_REDIRECT = true
 
 
 function storeSessionId(id) {
@@ -33,7 +33,6 @@ class APIConnection {
             for (i = 0; i < this.postConnectionHooks.length; i++) {
                 this.postConnectionHooks[i]();
             }
-            this.postConnectionHooks.splice(0, i)
         })
         this.socket.on("disconnect", () => {
             this.connected = false;
@@ -82,6 +81,22 @@ class APIConnection {
         })
     }
 
+    async attemptToResumeChat() {
+        this.resumeSession().then(() => {
+            // Resume Chat
+        }).catch(() => {
+            window.$alert.present("The session is no longer active", "Please start a new session.", [
+                {
+                    title: "OK",
+                    type: "normal",
+                    handler: () => {
+                        this.navigate(`/`)
+                    }
+                }
+            ])
+        })
+    }
+
     async destroySession(sessionId) {
         this.emit("destroy-session", {
             sessionId
@@ -112,6 +127,7 @@ class APIConnection {
     }
 
     async emit(event, data = {}) {
+        this.sessionId = retrieveSessionId()
         return new Promise((resolve, reject) => {
             let sendData = data
             if (data.sessionId === undefined) {

@@ -22,7 +22,6 @@ class Home extends React.Component {
             loading: null,
         };
         Connection.updateHistory(props.history);
-        Connection.attemptToResumeSession();
     }
 
     handleChange(ev) {

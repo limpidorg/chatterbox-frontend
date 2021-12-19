@@ -12,8 +12,7 @@ export class Alert extends React.Component {
             stackLevel: 0,
             developerMode: false,
             presentBlockTime: 100,
-            dismissBlockTime: 0,
-            alertAnimationStyles: {}
+            dismissBlockTime: 0
         };
         window.$alert = this
     }
@@ -147,10 +146,12 @@ export class Alert extends React.Component {
                     })
                 }
             };
+            const { alertQueue } = this.state
             if (immediately) {
-                executeDismiss();
+                // executeDismiss(); Not supported in React
+                alertQueue.queue(executeDismiss, immediately);
             } else {
-                this.alertQueue.queue(executeDismiss, immediately);
+                alertQueue.queue(executeDismiss, immediately);
             }
         });
         return prom;
@@ -185,7 +186,7 @@ export class Alert extends React.Component {
         const prom = new Promise((resolve) => {
             const identifier = Math.floor(Math.random() * 10000000);
             const executePresent = (() => {
-                const { presentBlockTime, alertAnimationStyles } = this.state
+                const { presentBlockTime } = this.state
                 const actionsCopy = [...actions]
 
                 for (let i = 0; i < actionsCopy.length; i++) {
@@ -220,27 +221,27 @@ export class Alert extends React.Component {
                 const { alertStack } = this.state
                 const alertStackCopy = [...alertStack, identifier];
 
-                const newAlertAnimationStyles = { ...alertAnimationStyles };
-                newAlertAnimationStyles[identifier] = {
-                    opacity: 0,
-                    transform: "scale(1.2)",
-                    transition: "all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1)"
-                }
+                // const newAlertAnimationStyles = { ...alertAnimationStyles };
+                // newAlertAnimationStyles[identifier] = {
+                //     opacity: 0,
+                //     transform: "scale(1.2)",
+                //     transition: "all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1)"
+                // }
 
                 this.setState({
                     alerts: alertsCopy,
                     stackLevel: newStackLevel,
                     alertStack: alertStackCopy,
-                    alertAnimationStyles: newAlertAnimationStyles,
+                    // alertAnimationStyles: newAlertAnimationStyles,
                 })
-                setTimeout(() => {
-                    // A seperate timeout is used so that the animation can be seen.
-                    delete newAlertAnimationStyles[identifier]
-                    // Finally, remove the style
-                    this.setState({
-                        alertAnimationStyles: newAlertAnimationStyles
-                    })
-                }, 300);
+                // setTimeout(() => {
+                //     // A seperate timeout is used so that the animation can be seen.
+                //     delete newAlertAnimationStyles[identifier]
+                //     // Finally, remove the style
+                //     this.setState({
+                //         alertAnimationStyles: newAlertAnimationStyles
+                //     })
+                // }, 300);
 
                 setTimeout((() => {
                     const { alertQueue } = this.state
@@ -249,10 +250,11 @@ export class Alert extends React.Component {
                 }), presentBlockTime);
 
             })
+            const { alertQueue } = this.state
             if (immediately) {
-                executePresent();
+                // executePresent(); Not supported in React
+                alertQueue.queue(executePresent);
             } else {
-                const { alertQueue } = this.state
                 alertQueue.queue(executePresent);
             }
         });
@@ -273,11 +275,9 @@ export class Alert extends React.Component {
                 Object.entries(alerts).map((entry) => {
                     const identifier = entry[0]
                     const alert = entry[1]
-                    const { alertAnimationStyles } = this.state
                     return (
                         <div key={identifier} style={{
                             zIndex: 100000000 + (alert.stackLevel ? alert.stackLevel : 0),
-                            ...(alertAnimationStyles[identifier] ?? {})
                         }} className="alert-transition alert-shadow" >
                             <div className="alert-contentbox">
                                 <div className="alert-content">
