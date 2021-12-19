@@ -20,6 +20,7 @@ class Home extends React.Component {
             invalidDiscordTag: false,
             hasJoinedDiscord: true,
             loading: null,
+            isLoggedIn: true,
         };
         Connection.updateHistory(props.history);
     }
@@ -109,7 +110,7 @@ class Home extends React.Component {
 
                 window.$alert.present(
                     "Our bot couldn't find you.",
-                    "Please ensure you have at least one common server with out bot.",
+                    "Please ensure you have at least one common server with our bot.",
                     [
                         {
                             title: "OK",
@@ -121,12 +122,10 @@ class Home extends React.Component {
                             },
                         },
                         {
-                            title: "Invite the bot",
+                            title: "Join our discord server",
                             type: "normal",
                             handler: () => {
-                                window.open(
-                                    "https://discord.com/api/oauth2/authorize?client_id=921681984034598923&permissions=0&scope=bot"
-                                );
+                                window.open("https://discord.gg/YY3qTHkjaT");
                                 this.setState({
                                     loading: null,
                                 });
@@ -181,6 +180,7 @@ class Home extends React.Component {
             invalidDiscordTag,
             hasJoinedDiscord,
             loading,
+            isLoggedIn,
         } = this.state;
         return (
             <Container>
@@ -205,47 +205,78 @@ class Home extends React.Component {
                         ) : (
                             <div>
                                 <FormContainer>
-                                    <FormGroup>
-                                        <span>
-                                            <i className="fab fa-discord" />
-                                        </span>
-                                        <FormField
-                                            className="form-field"
-                                            type="text"
-                                            maxLength={40}
-                                            placeholder="Enter your discord tag"
-                                            value={discord}
-                                            onChange={(event) => {
-                                                this.handleChange(event);
-                                            }}
-                                            style={
-                                                invalidDiscordTag
-                                                    ? {
-                                                          border:
-                                                              "2px solid red",
-                                                      }
-                                                    : {}
-                                            }
-                                            onKeyDown={(ev) => {
-                                                if (ev.key === "Enter") {
-                                                    this.handleSubmission();
-                                                }
-                                            }}
-                                        />
-                                    </FormGroup>
+                                    {isLoggedIn && (
+                                        <>
+                                            <button
+                                                type="button"
+                                                className="choices"
+                                                style={{
+                                                    cursor: "pointer",
+                                                }}
+                                            >
+                                                Resume chat
+                                            </button>
+                                            <button
+                                                type="button"
+                                                className="choices"
+                                                style={{
+                                                    cursor: "pointer",
+                                                }}
+                                            >
+                                                Reset my identity
+                                            </button>
+                                        </>
+                                    )}
+                                    {!isLoggedIn && (
+                                        <>
+                                            <FormGroup>
+                                                <span>
+                                                    <i className="fab fa-discord" />
+                                                </span>
+                                                <FormField
+                                                    className="form-field"
+                                                    type="text"
+                                                    maxLength={40}
+                                                    placeholder="Enter your discord tag"
+                                                    value={discord}
+                                                    onChange={(event) => {
+                                                        this.handleChange(
+                                                            event
+                                                        );
+                                                    }}
+                                                    style={
+                                                        invalidDiscordTag
+                                                            ? {
+                                                                  border:
+                                                                      "2px solid red",
+                                                              }
+                                                            : {}
+                                                    }
+                                                    onKeyDown={(ev) => {
+                                                        if (
+                                                            ev.key === "Enter"
+                                                        ) {
+                                                            this.handleSubmission();
+                                                        }
+                                                    }}
+                                                />
+                                            </FormGroup>
 
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            this.handleSubmission();
-                                        }}
-                                        style={{
-                                            cursor: "pointer",
-                                        }}
-                                    >
-                                        <i className="fas fa-angle-double-right" />
-                                    </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    this.handleSubmission();
+                                                }}
+                                                style={{
+                                                    cursor: "pointer",
+                                                }}
+                                            >
+                                                <i className="fas fa-angle-double-right" />
+                                            </button>
+                                        </>
+                                    )}
                                 </FormContainer>
+
                                 {!hasJoinedDiscord && (
                                     <div
                                         href="/"
@@ -259,15 +290,17 @@ class Home extends React.Component {
                                     </div>
                                 )}
                                 <br />
-                                <div
-                                    onClick={() => {
-                                        this.continueWithoutDiscord();
-                                    }}
-                                    role="none"
-                                    className="navigation"
-                                >
-                                    Continue without discord
-                                </div>
+                                {!isLoggedIn && (
+                                    <div
+                                        onClick={() => {
+                                            this.continueWithoutDiscord();
+                                        }}
+                                        role="none"
+                                        className="navigation"
+                                    >
+                                        Continue without discord
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>

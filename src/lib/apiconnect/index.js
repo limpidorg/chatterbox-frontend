@@ -11,7 +11,7 @@ function retrieveSessionId() {
 }
 
 class APIConnection {
-    constructor({ APIEndpoint = "http://localhost:5051" } = {}) {
+    constructor({ APIEndpoint = "http://localhost:3001" } = {}) {
         this.APIEndpoint = APIEndpoint;
         this.socket = io(this.APIEndpoint);
         this.connected = false;

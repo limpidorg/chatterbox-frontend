@@ -87,6 +87,14 @@ export const FormContainer = styled.div`
     display: flex;
     flex-direction: row;
 
+    .choices {
+        margin: 0 25px 0 0;
+        padding: 20px 30px 20px 30px;
+        width: max-content;
+        font-size: 1rem;
+        color: white;
+    }
+
     button {
         margin-left: 15px;
         border-radius: 6px;

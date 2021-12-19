@@ -58,28 +58,32 @@ class WaitingRoom extends React.Component {
     joinChat(chatId) {
         this.setState({
             loading: `We found it! It could be the beginning of a great adventure. Teleporting...`,
-        })
+        });
         if (window.location.pathname !== "/waiting-room") {
-            window.$alert.present("We found a chat!", "You're not in the waiting room - do you want to teleport to the chat?", [
+            window.$alert.present(
+                "We found a chat!",
+                "You're not in the waiting room - do you want to teleport to the chat?",
+                [
+                    {
+                        title: "No",
+                        type: "cancel",
+                    },
+                    {
+                        title: "Yes",
+                        type: "normal",
+                        handler: () => {
+                            const { history } = this.props;
+                            history.replace(`/chat/${chatId}`);
+                        },
+                    },
+                ],
                 {
-                    title: "No",
-                    type: "cancel"
-                }, {
-                    title: "Yes",
-                    type: "normal",
-                    handler: () => {
-                        const { history } = this.props;
-                        history.replace(`/chat/${chatId}`);
-                    }
+                    defaultAction: 1,
                 }
-            ], {
-                defaultAction: 1
-            })
-            return
+            );
+            return;
         }
-        Connection.joinChat(chatId).then(() => {
-
-        })
+        Connection.joinChat(chatId).then(() => {});
     }
 
     async matchChat() {
@@ -95,7 +99,7 @@ class WaitingRoom extends React.Component {
                 .then(() => {
                     this.setState({
                         loading:
-                            "The universe is huge but we're giving our best to find your chatling...",
+                            "The universe is huge but we're trying our best to find your CHATLING...",
                     });
                 })
                 .catch((e) => {
