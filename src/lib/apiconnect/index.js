@@ -16,6 +16,7 @@ class APIConnection {
         this.socket = io(this.APIEndpoint);
         this.connected = false;
         this.postConnectionHooks = [];
+        this.postConnectionOnce = [];
         // Set up message handler
         this.socket.on("message", (data) => {
             // Sends ACK (i.e. Delivered)
@@ -30,8 +31,13 @@ class APIConnection {
             this.connected = true;
             let i = 0;
             for (i = 0; i < this.postConnectionHooks.length; i++) {
+                // console.log('Hook', this.postConnectionHooks[i], i);
                 this.postConnectionHooks[i]();
             }
+            for (i = 0; i < this.postConnectionOnce.length; i++) {
+                this.postConnectionOnce[i]();
+            }
+            this.postConnectionOnce.splice(0, i)
         });
         this.socket.on("disconnect", () => {
             this.connected = false;
@@ -59,7 +65,6 @@ class APIConnection {
     }
 
     async attemptToResumeSession() {
-
         this.resumeSession().then(() => {
             this.navigate(`/waiting-room`)
         }).catch(() => {
@@ -107,6 +112,7 @@ class APIConnection {
         });
     }
 
+
     async resumeSession() {
         const sessionResponse = await this.emit("resume-session", {
             sessionId: retrieveSessionId(),
@@ -153,7 +159,7 @@ class APIConnection {
             };
 
             if (!this.connected) {
-                this.postConnectionHooks.push(() => {
+                this.postConnectionOnce.push(() => {
                     // window.$alert.present("You are not connected to the server.", "Please try again later.")
                     // reject()
                     emitToSocket();
@@ -168,22 +174,18 @@ class APIConnection {
         this.socket.on(event, (data) => {
             callback(data); // Process data here
         });
-    }
-
-    onNewMessage(handler) {
-        if (this.hooks.onNewMessage) {
-            this.hooks.onNewMessage.push(handler);
-        } else {
-            this.hooks.onNewMessage = [handler];
-        }
-    }
-
-    async sendMessage(message) {
-        const identifier = Math.random().toString(36).substring(2, 15);
-        return this.emit("message", {
-            message,
-            identifier,
+        this.postConnectionHooks.push(() => {
+            this.socket.on(event, (data) => {
+                callback(data); // Process data here
+            });
         });
+    }
+
+    async sendMessage(chatId, message) {
+        return this.emit("send-message", {
+            chatId,
+            message,
+        })
     }
 }
 
