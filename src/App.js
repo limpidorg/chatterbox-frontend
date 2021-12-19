@@ -11,8 +11,8 @@ import "./index.css";
 import { Connection } from "./lib/apiconnect";
 
 function App() {
-    const location = useLocation()
-    const history = useHistory()
+    const location = useLocation();
+    const history = useHistory();
     const theme = {
         mainColors: {
             darkBlue: "#5b9cae",
@@ -33,15 +33,13 @@ function App() {
         }
 
         Connection.on("session-destroyed", () => {
-            history.replace('/')
+            history.replace("/");
             window.$alert.present(
                 "Your session has been destroyed",
                 "Please create a new session."
-            )
-        })
+            );
+        });
     }, []);
-
-
 
     return (
         <ThemeProvider theme={theme}>

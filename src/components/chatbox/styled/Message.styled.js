@@ -21,6 +21,12 @@ export const Row = styled.div`
         border-radius: 100px;
     }
 
+    .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 100px;
+    }
+
     p {
         margin: 15px;
         padding: 10px;
