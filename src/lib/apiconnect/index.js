@@ -1,6 +1,6 @@
 import io from "socket.io-client";
 
-const DEVELOPER_MODE_NO_REDIRECT = true;
+const DEVELOPER_MODE_NO_REDIRECT = false;
 
 function storeSessionId(id) {
     localStorage.setItem("sessionId", id);

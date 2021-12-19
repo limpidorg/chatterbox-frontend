@@ -30,12 +30,14 @@ const Chatbox = () => {
         // Init - Join chat
         Connection.joinChat(id).then((res) => {
             setConversation(res.conversations);
+            setLoading(null);
         }).catch((e) => {
             window.$alert.present("Could not join the chat", e.message, [
                 {
                     title: "OK",
                     type: "normal",
                     handler: () => {
+                        setLoading(e.message);
                         Connection.navigate("/")
                     }
                 }
