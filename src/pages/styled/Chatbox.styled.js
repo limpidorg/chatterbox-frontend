@@ -29,6 +29,10 @@ export const Container = styled.div`
     background-color: ${({ theme }) => theme.mainColors.lightBlue};
 
     overflow-y: scroll;
+
+    @media screen and (max-width: 768px) {
+        padding: 0 30px 0 30px 0 !important;
+    }
 `;
 
 export const Box = styled.div`
@@ -121,6 +125,7 @@ export const Content = styled.div`
 
     span {
         position: relative;
+        display: inline-block;
     }
 
     span:before {
@@ -160,13 +165,16 @@ export const Content = styled.div`
 `;
 
 export const ActionBar = styled.div`
+    position: relative;
+    width: 100%;
     height: 50px;
 
     @media screen and (max-width: 768px) {
+        position: fixed;
+        bottom: 0;
+        left: 0;
         height: 50px;
     }
-
-    display: table-row;
 
     display: flex;
     flex-direction: row;
@@ -176,6 +184,9 @@ export const ActionBar = styled.div`
     border-top: 3px solid ${({ theme }) => theme.mainColors.grey};
 
     input {
+        text-align: 
+        width: 100%;
+        z-index: 100;
         color: ${({ theme }) => theme.mainColors.grey};
         width: 80%;
         padding: 0 0 0 25px;
@@ -195,6 +206,7 @@ export const ActionBar = styled.div`
 
     button,
     input {
+        margin: 0;
         border: none;
         background: none;
         font-family: inherit;
