@@ -18,4 +18,10 @@ export const Container = styled.div`
         word-break: break-word;
         color: white;
     }
+
+    @media screen and (max-width: 768px) {
+        h1 {
+            font-size: 1.75rem;
+        }
+    }
 `;
