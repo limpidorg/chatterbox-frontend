@@ -96,6 +96,14 @@ class Chatbox extends React.Component {
             });
     }
 
+    componentDidMount() {
+        this.scrollToBottom();
+    }
+
+    componentDidUpdate() {
+        this.scrollToBottom();
+    }
+
     handleChange(ev) {
         this.setState({
             message: ev.target.value,
@@ -166,6 +174,10 @@ class Chatbox extends React.Component {
                 },
             ]
         );
+    }
+
+    scrollToBottom() {
+        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
     }
 
     pushMessage(newMessage) {
@@ -361,6 +373,12 @@ class Chatbox extends React.Component {
                                         </Message>
                                     );
                                 })}
+                                <div
+                                    style={{ float: "left", clear: "both" }}
+                                    ref={(el) => {
+                                        this.messagesEnd = el;
+                                    }}
+                                />
                             </Content>
                             <ActionBar>
                                 <input
