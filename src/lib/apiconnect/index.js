@@ -1,6 +1,6 @@
 import io from "socket.io-client";
 
-const DEVELOPER_MODE_NO_REDIRECT = false;
+const DEVELOPER_MODE_NO_REDIRECT = true;
 
 function storeSessionId(id) {
     localStorage.setItem("sessionId", id);
@@ -52,33 +52,35 @@ class APIConnection {
             return;
         }
         if (this.history) {
-            this.history.replace(path)
+            this.history.replace(path);
         } else {
             window.location.href = path;
         }
     }
 
     async attemptToResumeSession() {
-        this.resumeSession().then(() => {
-            // window.$alert.present("Do you want to return to your previous session?", "Pressing no will destroy the previous session and all your previously-entered personal information to keep your identity secure.", [
-            //     {
-            //         title: "No",
-            //         type: "destructive",
-            //         handler: () => {
-            //             this.destroySession(sessionInfo.sessionId);
-            //         }
-            //     }, {
-            //         title: "Yes",
-            //         type: "normal",
-            //         handler: () => {
-            //             this.navigate(`/waiting-room`)
-            //         }
-            //     }
-            // ])
-            this.navigate(`/waiting-room`)
-        }).catch(() => {
-            console.log("Session not found")
-        })
+        this.resumeSession()
+            .then(() => {
+                // window.$alert.present("Do you want to return to your previous session?", "Pressing no will destroy the previous session and all your previously-entered personal information to keep your identity secure.", [
+                //     {
+                //         title: "No",
+                //         type: "destructive",
+                //         handler: () => {
+                //             this.destroySession(sessionInfo.sessionId);
+                //         }
+                //     }, {
+                //         title: "Yes",
+                //         type: "normal",
+                //         handler: () => {
+                //             this.navigate(`/waiting-room`)
+                //         }
+                //     }
+                // ])
+                this.navigate(`/waiting-room`);
+            })
+            .catch(() => {
+                console.log("Session not found");
+            });
     }
 
     async attemptToResumeChat() {
@@ -111,16 +113,15 @@ class APIConnection {
 
     async joinChat(chatId) {
         return this.emit("join-chat", {
-            chatId
-        })
+            chatId,
+        });
     }
 
     async leaveChat(chatId) {
         return this.emit("leave-chat", {
-            chatId
-        })
+            chatId,
+        });
     }
-
 
     async resumeSession() {
         const sessionResponse = await this.emit("resume-session", {

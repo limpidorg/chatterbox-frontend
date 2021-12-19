@@ -20,7 +20,7 @@ class Home extends React.Component {
             invalidDiscordTag: false,
             hasJoinedDiscord: true,
             loading: null,
-            isLoggedIn: true,
+            isLoggedIn: false,
         };
         Connection.updateHistory(props.history);
     }
