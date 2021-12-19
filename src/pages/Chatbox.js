@@ -83,12 +83,14 @@ class Chatbox extends React.Component {
                 });
                 Connection.on("new-message", (data) => {
                     if (
-                        data.chatId === id &&
-                        this.messageNotInConversation(data.messageId)
+                        data.chatId === id
                     ) {
-                        this.pushMessage(data.message).then(() => {
-                            this.scrollToBottom();
-                        });
+                        const messageIndex = this.getMessageIndex(data.messageId);
+                        if (messageIndex === null) {
+                            this.pushMessage(data.message).then(() => {
+                                this.scrollToBottom();
+                            });
+                        }
                     }
                 });
             })
@@ -116,24 +118,19 @@ class Chatbox extends React.Component {
         }
         Connection.sendMessage(id, message)
             .then(() => {
-                this.setState({
-                    message: "",
-                });
+
             })
             .catch((e) => {
                 window.$alert.present("Could not send message", e.message, [
                     {
                         title: "OK",
-                        type: "normal",
-                        handler: () => {
-                            this.setState({
-                                loading: e.message,
-                            });
-                            Connection.navigate("/");
-                        },
+                        type: "cancel",
                     },
                 ]);
             });
+        this.setState({
+            message: "",
+        });
     }
 
     handleLeave() {
@@ -178,6 +175,16 @@ class Chatbox extends React.Component {
         );
     }
 
+    getMessageIndex(messageId) {
+        const { conversation } = this.state;
+        for (let i = 0; i < conversation.length; i++) {
+            if (conversation[i].messageId === messageId) {
+                return i;
+            }
+        }
+        return null;
+    }
+
     scrollToBottom(isSmooth = true) {
         if (this.messagesEnd) {
             this.messagesEnd.scrollIntoView(isSmooth ? { behavior: "smooth" } : {});
@@ -196,15 +203,7 @@ class Chatbox extends React.Component {
         });
     }
 
-    messageNotInConversation(messageId) {
-        const { conversation } = this.state;
-        for (let i = 0; i < conversation.length; i++) {
-            if (conversation[i].messageId === messageId) {
-                return false;
-            }
-        }
-        return true;
-    }
+
 
     render() {
         const { message, loading, conversation } = this.state;

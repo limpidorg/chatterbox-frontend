@@ -177,11 +177,7 @@ class APIConnection {
         this.socket.on(event, (data) => {
             callback(data); // Process data here
         });
-        this.postConnectionHooks.push(() => {
-            this.socket.on(event, (data) => {
-                callback(data); // Process data here
-            });
-        });
+
     }
 
     async sendMessage(chatId, message) {
