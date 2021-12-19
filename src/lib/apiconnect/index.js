@@ -70,11 +70,11 @@ class APIConnection {
     async destroySession(sessionId) {
         this.emit("destroy-session", {
             sessionId
-        }).then(() => {
-            window.$alert.present("Session destroyed", "Your session has been destroyed.")
-        }).catch(() => {
-            window.$alert.present("We could not destroy your session", "An error occured.")
         })
+    }
+
+    async joinChat(chatId) {
+        this.navigate(`/chatbox/${chatId}`)
     }
 
     async resumeSession() {
@@ -96,7 +96,7 @@ class APIConnection {
         return sessionResponse.sessionInfo
     }
 
-    async emit(event, data) {
+    async emit(event, data = {}) {
         return new Promise((resolve, reject) => {
             let sendData = data
             if (data.sessionId === undefined) {
@@ -122,7 +122,9 @@ class APIConnection {
     }
 
     on(event, callback) {
-        this.socket.on(event, callback);
+        this.socket.on(event, (data)=>{
+            callback(data) // Process data here
+        });
     }
 
     onNewMessage(handler) {

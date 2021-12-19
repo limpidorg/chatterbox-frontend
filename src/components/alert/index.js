@@ -12,7 +12,7 @@ export class Alert extends React.Component {
             stackLevel: 0,
             developerMode: false,
             presentBlockTime: 100,
-            dismissBlockTime: 100,
+            dismissBlockTime: 0,
             alertAnimationStyles: {}
         };
         window.$alert = this
@@ -104,7 +104,7 @@ export class Alert extends React.Component {
     async dismiss(_identifier = null, { immediately = false } = {}) {
         const prom = new Promise((resolve) => {
             const executeDismiss = () => {
-                const { alerts, alertStack, alertQueue, alertAnimationStyles } = this.state
+                const { alerts, alertStack, alertQueue } = this.state
 
                 let identifier = _identifier
                 if (_identifier === null) {
@@ -125,28 +125,14 @@ export class Alert extends React.Component {
                 const alertStackCopy = [...alertStack]
                 alertStackCopy.splice(alertStackCopy.indexOf(identifier), 1);
 
-                const newAlertAnimationStyles = { ...alertAnimationStyles }
-                newAlertAnimationStyles[identifier] = {
-                    opacity: 0,
-                    transition: "all 0.3s cubic-bezier(0.075, 0.82, 0.165, 1)"
-                }
-
                 this.setState({
                     // alerts: alertsCopy, // not updating immediately for the sack of animation
-                    alertStack: alertStackCopy,
-                    alertAnimationStyles: newAlertAnimationStyles
+                    alertStack: alertStackCopy
                 });
                 const { dismissBlockTime } = this.state
-                setTimeout(() => {
-                    // A seperate timeout is used so that the animation can be seen.
-                    this.setState({
-                        alerts: alertsCopy,
-                    })
-                    delete newAlertAnimationStyles[identifier]
-                    this.setState({
-                        alertAnimationStyles: newAlertAnimationStyles
-                    });
-                }, 300);
+                this.setState({
+                    alerts: alertsCopy,
+                })
                 setTimeout(() => {
                     alertQueue.dequeue();
                     resolve(true);
