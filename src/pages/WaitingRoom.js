@@ -8,7 +8,7 @@ class WaitingRoom extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: "Searching for your next adventure...",
+            loading: "Searching for your next experience...",
         };
         const { history } = this.props;
 
@@ -21,17 +21,18 @@ class WaitingRoom extends React.Component {
                 console.log("ResumeSession");
                 if (sessionInfo.activeChat) {
                     this.setState({
-                        loading: `Connecting to chat # ${sessionInfo.activeChat}`,
+                        loading: `Chatling found! It's just the beginning of a great adventure... ${sessionInfo.activeChat}`,
                     });
                     Connection.joinChat(sessionInfo.activeChat).then(() => {});
                 } else {
                     this.setState({
-                        loading: "Matching you with another user...",
+                        loading:
+                            "Asking for permission to enter chatterbox world...",
                     });
                     Connection.on("new-chat-found", (res) => {
                         const { chatId } = res;
                         this.setState({
-                            loading: `Connecting to chat # ${chatId}`,
+                            loading: `Chatling found! It's just the beginning of a great adventure... (${chatId})`,
                         });
                         Connection.joinChat(chatId).then(() => {});
                     });
@@ -39,7 +40,7 @@ class WaitingRoom extends React.Component {
                         .then(() => {
                             this.setState({
                                 loading:
-                                    "Request sent successfully. Waiting for a match...",
+                                    "The universe is huge but we're trying to find your chatling...",
                             });
                         })
                         .catch((e) => {
@@ -176,7 +177,9 @@ class WaitingRoom extends React.Component {
                 />
                 );
                 <Container>
-                    <h1><span>{loading}</span></h1>
+                    <h1>
+                        <span>{loading}</span>
+                    </h1>
                 </Container>
             </>
         );
