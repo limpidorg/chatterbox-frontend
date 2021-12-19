@@ -55,6 +55,15 @@ class WaitingRoom extends React.Component {
             });
     }
 
+    joinChat(chatId) {
+        this.setState({
+            loading: `We found it! It could be the beginning of a great adventure. Teleporting...`,
+        })
+        Connection.joinChat(chatId).then(() => {
+
+        })
+    }
+
     async matchChat() {
         return new Promise((resolve, reject) => {
             this.setState({

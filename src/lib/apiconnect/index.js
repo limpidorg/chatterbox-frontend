@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 
-const DEVELOPER_MODE_NO_REDIRECT = true
+const DEVELOPER_MODE_NO_REDIRECT = false
 
 
 function storeSessionId(id) {
@@ -15,6 +15,8 @@ class APIConnection {
     constructor({ APIEndpoint = "http://localhost:5051" } = {}) {
         this.APIEndpoint = APIEndpoint;
         this.socket = io(this.APIEndpoint);
+        this.connected = false;
+        this.postConnectionHooks = []
         // Set up message handler
         this.socket.on("message", (data) => {
             // Sends ACK (i.e. Delivered)
@@ -26,8 +28,15 @@ class APIConnection {
         });
         this.socket.on("connect", () => {
             console.log('Connected to the server');
+            this.connected = true;
+            let i = 0;
+            for (i = 0; i < this.postConnectionHooks.length; i++) {
+                this.postConnectionHooks[i]();
+            }
+            this.postConnectionHooks.splice(0, i)
         })
         this.socket.on("disconnect", () => {
+            this.connected = false;
             console.log('Disconnected from server');
         })
         this.hooks = {};
@@ -40,7 +49,7 @@ class APIConnection {
     }
 
     async navigate(path) {
-        if(DEVELOPER_MODE_NO_REDIRECT) {
+        if (DEVELOPER_MODE_NO_REDIRECT) {
             // Dev
             return
         }
@@ -112,23 +121,37 @@ class APIConnection {
                 }
             }
 
-            this.socket.emit(event, sendData, (response) => {
-                if (response) {
-                    if (response.code < 0) {
-                        reject(response)
+            const emitToSocket = () => {
+                this.socket.emit(event, sendData, (response) => {
+                    if (response) {
+                        if (response.code < 0) {
+                            reject(response)
+                        } else {
+                            // The server acknowledges the message and it was sent successfully
+                            resolve(response);
+                        }
                     } else {
-                        // The server acknowledges the message and it was sent successfully
-                        resolve(response);
+                        resolve();
                     }
-                } else {
-                    resolve();
-                }
-            });
+                });
+            }
+
+            if (!this.connected) {
+                this.postConnectionHooks.push(() => {
+                    // window.$alert.present("You are not connected to the server.", "Please try again later.")
+                    // reject()
+                    emitToSocket()
+                })
+            } else {
+                emitToSocket()
+            }
+
+
         });
     }
 
     on(event, callback) {
-        this.socket.on(event, (data)=>{
+        this.socket.on(event, (data) => {
             callback(data) // Process data here
         });
     }
