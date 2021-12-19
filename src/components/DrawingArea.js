@@ -1,7 +1,7 @@
 /* eslint-disable no-bitwise */
 import { React, useEffect, useState, useRef } from "react";
 import { Stage, Layer, Line } from "react-konva";
-import useWindowDimensions from "../../hooks/useWindowDimension";
+import useWindowDimensions from "../hooks/useWindowDimension";
 import { Container } from "./styled/DrawingArea.styled";
 
 const DrawingArea = ({ clearLines }) => {

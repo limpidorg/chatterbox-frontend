@@ -5,7 +5,7 @@ import { useParams } from "react-router";
 import { ActionBar, Box, Container, Content } from "./styled/Chatbox.styled";
 import Message from "../components/chatbox/Message";
 import Cross from "../components/chatbox/Cross";
-import DrawingArea from "../components/chatbox/DrawingArea";
+import DrawingArea from "../components/DrawingArea";
 
 const Chatbox = () => {
     const [message, setMessage] = useState("");
