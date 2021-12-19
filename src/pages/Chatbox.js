@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable no-unused-vars */
 import React, { useState } from "react";
+import { useParams } from "react-router";
 import { ActionBar, Box, Container, Content } from "./styled/Chatbox.styled";
 import Message from "../components/chatbox/Message";
 import Cross from "../components/chatbox/Cross";
@@ -8,6 +9,10 @@ import DrawingArea from "../components/chatbox/DrawingArea";
 
 const Chatbox = () => {
     const [message, setMessage] = useState("");
+
+    const { id } = useParams();
+
+    console.log(`The id of this room is ${id}`);
 
     const handleChange = (ev) => {
         setMessage(ev.target.value);

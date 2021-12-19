@@ -1,12 +1,12 @@
 import React from "react";
 import { ThemeProvider } from "styled-components";
 import { Route, Switch } from "react-router-dom";
-import { Alert } from "./components/alert"
+import { Alert } from "./components/alert";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 import WaitingRoom from "./pages/WaitingRoom";
-import Chatbox from "./pages/Chatbox"
-import "./index.css"
+import Chatbox from "./pages/Chatbox";
+import "./index.css";
 
 function App() {
     const theme = {
@@ -31,7 +31,7 @@ function App() {
                     <WaitingRoom />
                 </Route>
 
-                <Route exact path="/chatbox">
+                <Route exact path="/chatbox/:id">
                     <Chatbox />
                 </Route>
 

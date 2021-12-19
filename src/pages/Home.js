@@ -1,9 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router";
-import { Connection } from "../lib/apiconnect"
-import 'boxicons'
-import "../common.css"
-
+import { Connection } from "../lib/apiconnect";
+import "../common.css";
 
 import {
     Centered,
@@ -16,149 +14,175 @@ import {
 
 class Home extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             discord: "",
             invalidDiscordTag: false,
             hasJoinedDiscord: true,
-            loading: null
-        }
-        Connection.updateHistory(props.history)
-        Connection.attemptToResumeSession()
+            loading: null,
+        };
+        Connection.updateHistory(props.history);
+        Connection.attemptToResumeSession();
     }
 
     handleChange(ev) {
         const newValue = ev.target.value;
-        this.setState({
-            discord: newValue
-        }, () => {
-            this.setState({
-                invalidDiscordTag: this.isDiscordTagInvalid()
-            })
-        })
-    };
+        this.setState(
+            {
+                discord: newValue,
+            },
+            () => {
+                this.setState({
+                    invalidDiscordTag: this.isDiscordTagInvalid(),
+                });
+            }
+        );
+    }
 
     handleSubmission() {
         this.setState({
             loading: "Verifying your discord tag...",
-            hasJoinedDiscord: true
-        })
+            hasJoinedDiscord: true,
+        });
 
-        const { discord } = this.state
+        const { discord } = this.state;
 
         if (this.isDiscordTagInvalid() === true) {
-            window.$alert.present("Invalid discord tag", "Please enter a valid discord tag.", [
-                {
-                    title: "OK",
-                    type: "normal",
-                    handler: () => {
-                        this.setState({
-                            loading: null
-                        })
-                    }
-                }
-            ], {
-                defaultAction: 0
-            });
-            return
-        }
-
-        Connection.emit('discord-verification', {
-            discordId: discord
-        }).then(() => {
-            this.setState({
-                loading: "Starting a new session..."
-            })
-
-            Connection.newSession(discord).then((sessionInfo) => {
-                this.setState({
-                    loading: `Connecting to session ${sessionInfo.sessionId}`,
-                })
-                const { history } = this.props
-                history.push("/waiting-room")
-            }).catch(() => [
-                window.$alert.present("Error", "An error occured while starting a new session.", [
+            window.$alert.present(
+                "Invalid discord tag",
+                "Please enter a valid discord tag.",
+                [
                     {
                         title: "OK",
                         type: "normal",
                         handler: () => {
                             this.setState({
-                                loading: null
-                            })
-                        }
-                    }
-                ])
-            ])
-        }).catch(() => {
-            this.setState({
-                hasJoinedDiscord: false
-            })
-
-            window.$alert.present("Our bot couldn't find you.", "Please ensure you have at least one common server with out bot.", [
+                                loading: null,
+                            });
+                        },
+                    },
+                ],
                 {
-                    title: "OK",
-                    type: "normal",
-                    handler: () => {
-                        this.setState({
-                            loading: null
-                        })
-                    }
-                },
-                {
-                    title: "Invite the bot",
-                    type: "normal",
-                    handler: () => {
-                        window.open("https://discord.com/api/oauth2/authorize?client_id=921681984034598923&permissions=0&scope=bot")
-                        this.setState({
-                            loading: null
-                        })
-                    }
-                },
-                {
-                    title: "Continue without discord",
-                    type: "destructive",
-                    handler: () => {
-                        this.continueWithoutDiscord()
-                    }
+                    defaultAction: 0,
                 }
+            );
+            return;
+        }
 
-
-            ])
-        }).then(() => {
-            this.setState({
-                loading: null
-            })
+        Connection.emit("discord-verification", {
+            discordId: discord,
         })
+            .then(() => {
+                this.setState({
+                    loading: "Starting a new session...",
+                });
 
+                Connection.newSession(discord)
+                    .then((sessionInfo) => {
+                        this.setState({
+                            loading: `Connecting to session ${sessionInfo.sessionId}`,
+                        });
+                        const { history } = this.props;
+                        history.push("/waiting-room");
+                    })
+                    .catch(() => [
+                        window.$alert.present(
+                            "Error",
+                            "An error occured while starting a new session.",
+                            [
+                                {
+                                    title: "OK",
+                                    type: "normal",
+                                    handler: () => {
+                                        this.setState({
+                                            loading: null,
+                                        });
+                                    },
+                                },
+                            ]
+                        ),
+                    ]);
+            })
+            .catch(() => {
+                this.setState({
+                    hasJoinedDiscord: false,
+                });
 
+                window.$alert.present(
+                    "Our bot couldn't find you.",
+                    "Please ensure you have at least one common server with out bot.",
+                    [
+                        {
+                            title: "OK",
+                            type: "normal",
+                            handler: () => {
+                                this.setState({
+                                    loading: null,
+                                });
+                            },
+                        },
+                        {
+                            title: "Invite the bot",
+                            type: "normal",
+                            handler: () => {
+                                window.open(
+                                    "https://discord.com/api/oauth2/authorize?client_id=921681984034598923&permissions=0&scope=bot"
+                                );
+                                this.setState({
+                                    loading: null,
+                                });
+                            },
+                        },
+                        {
+                            title: "Continue without discord",
+                            type: "destructive",
+                            handler: () => {
+                                this.continueWithoutDiscord();
+                            },
+                        },
+                    ]
+                );
+            })
+            .then(() => {
+                this.setState({
+                    loading: null,
+                });
+            });
     }
 
     isDiscordTagInvalid() {
-        const { discord } = this.state
+        const { discord } = this.state;
         if (discord === "" || discord.match(/^.+#[0-9]{4}$/) !== null) {
             return false;
         } else {
             return true;
         }
-    };
-
-    continueWithoutDiscord() {
-        const { history } = this.props
-        this.setState({
-            loading: "Starting a new session..."
-        })
-        Connection.newSession().then((sessionInfo) => {
-            this.setState({
-                loading: `Connecting to session ${sessionInfo.sessionId}`
-            }, () => {
-                history.push("/waiting-room")
-            })
-        })
     }
 
+    continueWithoutDiscord() {
+        const { history } = this.props;
+        this.setState({
+            loading: "Starting a new session...",
+        });
+        Connection.newSession().then((sessionInfo) => {
+            this.setState(
+                {
+                    loading: `Connecting to session ${sessionInfo.sessionId}`,
+                },
+                () => {
+                    history.push("/waiting-room");
+                }
+            );
+        });
+    }
 
     render() {
-        const { discord, invalidDiscordTag, hasJoinedDiscord, loading } = this.state
+        const {
+            discord,
+            invalidDiscordTag,
+            hasJoinedDiscord,
+            loading,
+        } = this.state;
         return (
             <Container>
                 <Centered>
@@ -170,8 +194,8 @@ class Home extends React.Component {
                         </h1>
 
                         <p>
-                            YES, venting is cool here! Talk about anyone or anything{" "}
-                            <span>confidently</span>!<br />
+                            YES, venting is cool here! Talk about anyone or
+                            anything <span>confidently</span>!<br />
                             Avoid your family or friends with us :)
                         </p>
 
@@ -193,11 +217,14 @@ class Home extends React.Component {
                                             placeholder="Enter your discord tag"
                                             value={discord}
                                             onChange={(event) => {
-                                                this.handleChange(event)
+                                                this.handleChange(event);
                                             }}
                                             style={
                                                 invalidDiscordTag
-                                                    ? { border: "2px solid red" }
+                                                    ? {
+                                                          border:
+                                                              "2px solid red",
+                                                      }
                                                     : {}
                                             }
                                             onKeyDown={(ev) => {
@@ -211,7 +238,7 @@ class Home extends React.Component {
                                     <button
                                         type="button"
                                         onClick={() => {
-                                            this.handleSubmission()
+                                            this.handleSubmission();
                                         }}
                                         style={{
                                             cursor: "pointer",
@@ -228,15 +255,20 @@ class Home extends React.Component {
                                             marginBottom: "10px",
                                         }}
                                     >
-                                        You must join our discord to make it work!
+                                        You must join our discord to make it
+                                        work!
                                     </div>
                                 )}
                                 <br />
-                                <div onClick={
-                                    () => {
-                                        this.continueWithoutDiscord()
-                                    }
-                                } role="none" className="navigation">Continue without discord</div>
+                                <div
+                                    onClick={() => {
+                                        this.continueWithoutDiscord();
+                                    }}
+                                    role="none"
+                                    className="navigation"
+                                >
+                                    Continue without discord
+                                </div>
                             </div>
                         )}
                     </div>
@@ -247,10 +279,9 @@ class Home extends React.Component {
                         />
                     </div>
                 </Centered>
-            </Container >
+            </Container>
         );
     }
 }
-
 
 export default withRouter(Home);
