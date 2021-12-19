@@ -1,7 +1,10 @@
 import React from "react";
+import createDOMPurify from "dompurify";
 import { Container, Row } from "./styled/Message.styled";
 
-const Message = ({ self, avatarPath, avatar, children }) => {
+const Message = ({ self, avatar, children }) => {
+    const DOMPurify = createDOMPurify(window);
+
     return (
         <Container>
             <Row
@@ -12,7 +15,12 @@ const Message = ({ self, avatarPath, avatar, children }) => {
             >
                 {self && (
                     <>
-                        <div className="avatar">{avatar}</div>
+                        <div
+                            className="avatar"
+                            dangerouslySetInnerHTML={{
+                                __html: DOMPurify.sanitize(avatar),
+                            }}
+                        />
                         <p
                             style={{
                                 backgroundColor: "rgba(148, 148, 148, 0.5)",
@@ -35,7 +43,12 @@ const Message = ({ self, avatarPath, avatar, children }) => {
                         >
                             {children}
                         </p>
-                        <img src={avatarPath} alt="profile" />
+                        <div
+                            className="avatar"
+                            dangerouslySetInnerHTML={{
+                                __html: DOMPurify.sanitize(avatar),
+                            }}
+                        />
                     </>
                 )}
             </Row>

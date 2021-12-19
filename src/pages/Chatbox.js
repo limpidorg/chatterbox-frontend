@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { useHistory } from "react-router-dom";
-import { Particles } from "react-tsparticles";
+import { collisionVelocity, Particles } from "react-tsparticles";
 import multiavatar from "@multiavatar/multiavatar";
 import {
     ActionBar,
@@ -24,65 +24,78 @@ const Chatbox = () => {
     const { id } = useParams();
     const { history } = useHistory();
 
-    const [conversation, setConversation] = useState([]);
+    const [conv, setConv] = useState([]);
 
     const messageNotInConversation = (messageId) => {
-        for (let i = 0; i < conversation.length; i++) {
-            if (conversation[i].messageId === messageId) {
-                return false;
-            }
+        console.log(conv);
+        const x = conv.find((el) => el.messageId === messageId);
+        if (x === null) {
+            return true;
+        } else {
+            return false;
         }
-        return true;
-    }
-    console.log('Current', conversation);
+    };
 
     const pushMessage = (newMessage) => {
-        console.log(conversation, newMessage)
-        setConversation([...conversation, newMessage]);
-    }
+        setConv([...conv, newMessage]);
+    };
 
     useEffect(() => {
         // Init - Join chat
-        Connection.resumeSession().then(() => {
-            Connection.joinChat(id).then((res) => {
-                setConversation(res.conversations);
-                setLoading(null);
-            }).catch((e) => {
-                window.$alert.present("Could not join the chat", e.message, [
-                    {
-                        title: "OK",
-                        type: "normal",
-                        handler: () => {
-                            setLoading(e.message);
-                            Connection.navigate("/")
-                        }
+        Connection.resumeSession()
+            .then(() => {
+                Connection.joinChat(id)
+                    .then((res) => {
+                        setConv(res.conversations);
+                        setLoading(null);
+                    })
+                    .catch((e) => {
+                        window.$alert.present(
+                            "Could not join the chat",
+                            e.message,
+                            [
+                                {
+                                    title: "OK",
+                                    type: "normal",
+                                    handler: () => {
+                                        setLoading(e.message);
+                                        Connection.navigate("/");
+                                    },
+                                },
+                            ]
+                        );
+                    });
+                // Register for chat destoryed event
+                Connection.on("chat-destroyed", (data) => {
+                    if (data.chatId === id) {
+                        window.$alert.present(
+                            "The chat has been closed.",
+                            "Either you or your chatling closed the chat.",
+                            [
+                                {
+                                    title: "OK",
+                                    type: "normal",
+                                    handler: () => {
+                                        Connection.navigate("/");
+                                    },
+                                },
+                            ]
+                        );
                     }
-                ]);
+                });
+                Connection.on("new-message", (data) => {
+                    if (data.chatId === id) {
+                        console.log("heyyyy");
+                        pushMessage(data.message); // {"id": 1111, ""}
+                    }
+                });
             })
-            // Register for chat destoryed event
-            Connection.on('chat-destroyed', (data) => {
-                if (data.chatId === id) {
-                    window.$alert.present('The chat has been closed.', 'Either you or your chatling closed the chat.', [
-                        {
-                            title: 'OK',
-                            type: 'normal',
-                            handler: () => {
-                                Connection.navigate('/')
-                            }
-                        }
-                    ])
-
-                }
-            })
-            Connection.on('new-message', (data) => {
-                if (data.chatId === id && messageNotInConversation(data.messageId)) {
-                    pushMessage(data.message);
-                }
-            })
-        }).catch(() => {
-            window.$alert.present("The session is no longer active", "Please start a new session.");
-        })
-
+            .catch(() => {
+                window.$alert.present(
+                    "The session is no longer active",
+                    "Please start a new session."
+                );
+            });
     }, []);
 
     const handleChange = (ev) => {
@@ -90,57 +103,65 @@ const Chatbox = () => {
     };
 
     const handleSend = () => {
-        Connection.sendMessage(id, message).then((res) => {
-            setMessage("");
-        }).catch((e) => {
-            window.$alert.present("Could not send message", e.message, [
-                {
-                    title: "OK",
-                    type: "normal",
-                    handler: () => {
-                        setLoading(e.message);
-                        Connection.navigate("/")
-                    }
-                }
-            ]);
-        })
-
+        Connection.sendMessage(id, message)
+            .then((res) => {
+                setMessage("");
+            })
+            .catch((e) => {
+                window.$alert.present("Could not send message", e.message, [
+                    {
+                        title: "OK",
+                        type: "normal",
+                        handler: () => {
+                            setLoading(e.message);
+                            Connection.navigate("/");
+                        },
+                    },
+                ]);
+            });
     };
 
-
-
     const handleLeave = () => {
-        window.$alert.present("Do you want to end the chat?", "You won't be able to come back.", [
-            {
-                title: "No",
-                type: "cancel"
-            }, {
-                title: "Yes",
-                type: "destructive",
-                handler: () => {
-                    Connection.leaveChat(id).then(() => {
-                        setLoading("Leaving...");
-                        Connection.navigate("/");
-                    }).catch((e) => {
-                        window.$alert.present("Could not leave the chat", e.message, [
-                            {
-                                title: "OK",
-                                type: "normal",
-                                handler: () => {
-                                    Connection.navigate("/")
-                                }
-                            }
-                        ]);
-                    })
-                }
-            }
-        ])
+        window.$alert.present(
+            "Do you want to end the chat?",
+            "You won't be able to come back.",
+            [
+                {
+                    title: "No",
+                    type: "cancel",
+                },
+                {
+                    title: "Yes",
+                    type: "destructive",
+                    handler: () => {
+                        Connection.leaveChat(id)
+                            .then(() => {
+                                setLoading("Leaving...");
+                                Connection.navigate("/");
+                            })
+                            .catch((e) => {
+                                window.$alert.present(
+                                    "Could not leave the chat",
+                                    e.message,
+                                    [
+                                        {
+                                            title: "OK",
+                                            type: "normal",
+                                            handler: () => {
+                                                Connection.navigate("/");
+                                            },
+                                        },
+                                    ]
+                                );
+                            });
+                    },
+                },
+            ]
+        );
     };
 
     const avatar1 = multiavatar("Binx Bond");
     const avatar2 = multiavatar("Binx Bond");
-
-    console.log(avatar1);
 
     const date = new Date();
 
@@ -292,7 +313,7 @@ const Chatbox = () => {
                                 </span>{" "}
                                 {date.getFullYear()}
                             </h2>
-                            {conversation.map((el) => {
+                            {conv.map((el) => {
                                 return (
                                     <Message
                                         key={el.messageId}
@@ -324,9 +345,12 @@ const Chatbox = () => {
                                     }
                                 }}
                             />
-                            <button type="button" onClick={() => {
-                                handleSend()
-                            }}>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    handleSend();
+                                }}
+                            >
                                 Send
                             </button>
                         </ActionBar>
