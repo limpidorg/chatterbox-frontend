@@ -25,18 +25,20 @@ class Home extends React.Component {
             activeChat: null,
         };
         Connection.updateHistory(props.history);
-        Connection.resumeSession().then((res) => {
-            this.setState({
-                isLoggedIn: true,
-                loading: null,
-                activeChat: res.chatId
+        Connection.resumeSession()
+            .then(res => {
+                this.setState({
+                    isLoggedIn: true,
+                    loading: null,
+                    activeChat: res.chatId,
+                });
+            })
+            .catch(() => {
+                this.setState({
+                    isLoggedIn: false,
+                    loading: null,
+                });
             });
-        }).catch(() => {
-            this.setState({
-                isLoggedIn: false,
-                loading: null,
-            });
-        })
     }
 
     handleDiscordChange(ev) {
@@ -55,11 +57,9 @@ class Home extends React.Component {
 
     handleUsernameChange(ev) {
         const newValue = ev.target.value;
-        this.setState(
-            {
-                username: newValue,
-            }
-        );
+        this.setState({
+            username: newValue,
+        });
     }
 
     handleSubmission() {
@@ -93,7 +93,7 @@ class Home extends React.Component {
         }
 
         Connection.emit("discord-verification", {
-            discordId: discord
+            discordId: discord,
         })
             .then(() => {
                 this.setState({
@@ -101,7 +101,7 @@ class Home extends React.Component {
                 });
 
                 Connection.newSession(discord, username)
-                    .then((sessionInfo) => {
+                    .then(sessionInfo => {
                         this.setState({
                             loading: `Connecting to session ${sessionInfo.sessionId}`,
                         });
@@ -182,11 +182,11 @@ class Home extends React.Component {
 
     continueWithoutDiscord() {
         const { history } = this.props;
-        const { name } = this.state
+        const { name } = this.state;
         this.setState({
             loading: "Starting a new session...",
         });
-        Connection.newSession(null, name).then((sessionInfo) => {
+        Connection.newSession(null, name).then(sessionInfo => {
             this.setState(
                 {
                     loading: `Connecting to session ${sessionInfo.sessionId}`,
@@ -206,12 +206,10 @@ class Home extends React.Component {
             hasJoinedDiscord,
             loading,
             isLoggedIn,
-            activeChat
+            activeChat,
         } = this.state;
 
-        const {
-            history
-        } = this.props
+        const { history } = this.props;
 
         return (
             <Container>
@@ -245,10 +243,14 @@ class Home extends React.Component {
                                                     cursor: "pointer",
                                                 }}
                                                 onClick={() => {
-                                                    history.replace('/waiting-room');
+                                                    history.replace(
+                                                        "/waiting-room"
+                                                    );
                                                 }}
                                             >
-                                                {activeChat ? "Resume Chat" : "New Chat"}
+                                                {activeChat
+                                                    ? "Resume Chat"
+                                                    : "New Chat"}
                                             </button>
                                             <button
                                                 type="button"
@@ -257,9 +259,12 @@ class Home extends React.Component {
                                                     cursor: "pointer",
                                                 }}
                                                 onClick={() => {
-                                                    Connection.destroySession(Connection.sessionId).then(() => {
-                                                        window.location.href = "/";
-                                                    })
+                                                    Connection.destroySession(
+                                                        Connection.sessionId
+                                                    ).then(() => {
+                                                        window.location.href =
+                                                            "/";
+                                                    });
                                                 }}
                                             >
                                                 Reset my identity
@@ -283,7 +288,7 @@ class Home extends React.Component {
                                                         maxLength={40}
                                                         placeholder="Enter your discord tag"
                                                         value={discord}
-                                                        onChange={(event) => {
+                                                        onChange={event => {
                                                             this.handleDiscordChange(
                                                                 event
                                                             );
@@ -291,12 +296,11 @@ class Home extends React.Component {
                                                         style={
                                                             invalidDiscordTag
                                                                 ? {
-                                                                    border:
-                                                                        "2px solid red",
-                                                                }
+                                                                      border: "2px solid red",
+                                                                  }
                                                                 : {}
                                                         }
-                                                        onKeyDown={(ev) => {
+                                                        onKeyDown={ev => {
                                                             if (
                                                                 ev.key ===
                                                                 "Enter"
@@ -316,12 +320,12 @@ class Home extends React.Component {
                                                         maxLength={40}
                                                         placeholder="What do you want to be called?"
                                                         value={username}
-                                                        onChange={(event) => {
+                                                        onChange={event => {
                                                             this.handleUsernameChange(
                                                                 event
                                                             );
                                                         }}
-                                                        onKeyDown={(ev) => {
+                                                        onKeyDown={ev => {
                                                             if (
                                                                 ev.key ===
                                                                 "Enter"
