@@ -41,6 +41,8 @@ class Chatbox extends React.Component {
                         this.setState({
                             loading: null,
                             conversation: res.conversations,
+                        }, () => {
+                            this.scrollToBottom(false);
                         });
                     })
                     .catch((e) => {
@@ -84,7 +86,9 @@ class Chatbox extends React.Component {
                         data.chatId === id &&
                         this.messageNotInConversation(data.messageId)
                     ) {
-                        this.pushMessage(data.message);
+                        this.pushMessage(data.message).then(() => {
+                            this.scrollToBottom();
+                        });
                     }
                 });
             })
@@ -96,14 +100,6 @@ class Chatbox extends React.Component {
             });
     }
 
-    componentDidMount() {
-        this.scrollToBottom();
-    }
-
-    componentDidUpdate() {
-        this.scrollToBottom();
-    }
-
     handleChange(ev) {
         this.setState({
             message: ev.target.value,
@@ -112,6 +108,12 @@ class Chatbox extends React.Component {
 
     handleSend() {
         const { message, id } = this.state;
+        if (message.trim() === "") {
+            this.setState({
+                message: "",
+            })
+            return;
+        }
         Connection.sendMessage(id, message)
             .then(() => {
                 this.setState({
@@ -176,14 +178,21 @@ class Chatbox extends React.Component {
         );
     }
 
-    scrollToBottom() {
-        this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+    scrollToBottom(isSmooth = true) {
+        if (this.messagesEnd) {
+            this.messagesEnd.scrollIntoView(isSmooth ? { behavior: "smooth" } : {});
+        }
     }
 
-    pushMessage(newMessage) {
-        const { conversation } = this.state;
-        this.setState({
-            conversation: [...conversation, newMessage],
+    async pushMessage(newMessage) {
+        return new Promise((resolve) => {
+
+            const { conversation } = this.state;
+            this.setState({
+                conversation: [...conversation, newMessage],
+            }, () => {
+                resolve();
+            });
         });
     }
 
@@ -360,7 +369,7 @@ class Chatbox extends React.Component {
                                             key={el.messageId}
                                             avatar={
                                                 el.sessionId !==
-                                                Connection.sessionId
+                                                    Connection.sessionId
                                                     ? this.avatar1
                                                     : this.avatar2
                                             }
