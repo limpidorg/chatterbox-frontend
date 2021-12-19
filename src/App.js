@@ -24,7 +24,7 @@ function App() {
     // GOOGLE ANALYTICS
 
     useEffect(() => {
-        if (location.pathname.startsWith("/chatbox/")) {
+        if (location.pathname.startsWith("/chat/")) {
             Connection.attemptToResumeChat();
         } else if (location.pathname.startsWith("/waiting-room")) {
             // Do nothing
@@ -55,7 +55,7 @@ function App() {
                     <WaitingRoom />
                 </Route>
 
-                <Route exact path="/chatbox/:id">
+                <Route exact path="/chat/:id">
                     <Chatbox />
                 </Route>
 

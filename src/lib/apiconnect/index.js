@@ -1,6 +1,6 @@
 import io from 'socket.io-client';
 
-const DEVELOPER_MODE_NO_REDIRECT = true
+const DEVELOPER_MODE_NO_REDIRECT = false
 
 
 function storeSessionId(id) {
@@ -12,7 +12,7 @@ function retrieveSessionId() {
 }
 
 class APIConnection {
-    constructor({ APIEndpoint = "http://localhost:5051" } = {}) {
+    constructor({ APIEndpoint = "http://lincolns-imac.local:5051" } = {}) {
         this.APIEndpoint = APIEndpoint;
         this.socket = io(this.APIEndpoint);
         this.connected = false;
@@ -104,7 +104,7 @@ class APIConnection {
     }
 
     async joinChat(chatId) {
-        this.navigate(`/chatbox/${chatId}`)
+        this.navigate(`/chat/${chatId}`)
     }
 
     async resumeSession() {

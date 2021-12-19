@@ -59,6 +59,24 @@ class WaitingRoom extends React.Component {
         this.setState({
             loading: `We found it! It could be the beginning of a great adventure. Teleporting...`,
         })
+        if (window.location.pathname !== "/waiting-room") {
+            window.$alert.present("We found a chat!", "You're not in the waiting room - do you want to teleport to the chat?", [
+                {
+                    title: "No",
+                    type: "cancel"
+                }, {
+                    title: "Yes",
+                    type: "normal",
+                    handler: () => {
+                        const { history } = this.props;
+                        history.replace(`/chat/${chatId}`);
+                    }
+                }
+            ], {
+                defaultAction: 1
+            })
+            return
+        }
         Connection.joinChat(chatId).then(() => {
 
         })
