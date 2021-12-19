@@ -8,7 +8,7 @@ class WaitingRoom extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: "Searching for your next experience...",
+            loading: "Searching for your next adventure...",
         };
         const { history } = this.props;
 
@@ -18,30 +18,12 @@ class WaitingRoom extends React.Component {
 
         Connection.resumeSession()
             .then((sessionInfo) => {
-                console.log("ResumeSession");
-                if (sessionInfo.activeChat) {
-                    this.setState({
-                        loading: `Chatling found! It's just the beginning of a great adventure... ${sessionInfo.activeChat}`,
-                    });
-                    Connection.joinChat(sessionInfo.activeChat).then(() => {});
+                if (sessionInfo.chatId) {
+                    this.joinChat(sessionInfo.chatId);
                 } else {
-                    this.setState({
-                        loading:
-                            "Asking for permission to enter chatterbox world...",
-                    });
-                    Connection.on("new-chat-found", (res) => {
-                        const { chatId } = res;
-                        this.setState({
-                            loading: `Chatling found! It's just the beginning of a great adventure... (${chatId})`,
-                        });
-                        Connection.joinChat(chatId).then(() => {});
-                    });
-                    Connection.emit("new-chat-request")
-                        .then(() => {
-                            this.setState({
-                                loading:
-                                    "The universe is huge but we're trying to find your chatling...",
-                            });
+                    this.matchChat()
+                        .then((chatId) => {
+                            this.joinChat(chatId);
                         })
                         .catch((e) => {
                             Connection.destroySession(
@@ -71,6 +53,28 @@ class WaitingRoom extends React.Component {
                     "You session is no longer active. Please create a new session."
                 );
             });
+    }
+
+    async matchChat() {
+        return new Promise((resolve, reject) => {
+            this.setState({
+                loading:
+                    "Asking for permission to enter chatterbox universe...",
+            });
+            Connection.on("new-chat-found", (res) => {
+                resolve(res.chatId);
+            });
+            Connection.emit("new-chat-request")
+                .then(() => {
+                    this.setState({
+                        loading:
+                            "The universe is huge but we're giving our best to find your chatling...",
+                    });
+                })
+                .catch((e) => {
+                    reject(e);
+                });
+        });
     }
 
     render() {
