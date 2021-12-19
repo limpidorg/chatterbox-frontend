@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import io from "socket.io-client";
 
 const DEVELOPER_MODE_NO_REDIRECT = false;
@@ -18,10 +19,10 @@ class APIConnection {
         this.postConnectionHooks = [];
         this.postConnectionOnce = [];
         // Set up message handler
-        this.socket.on("message", data => {
+        this.socket.on("message", (data) => {
             // Sends ACK (i.e. Delivered)
             if (this.hooks.onNewMessage !== undefined) {
-                this.hooks.onNewMessage.forEach(handler => {
+                this.hooks.onNewMessage.forEach((handler) => {
                     handler(data);
                 });
             }
@@ -37,7 +38,7 @@ class APIConnection {
             for (i = 0; i < this.postConnectionOnce.length; i++) {
                 this.postConnectionOnce[i]();
             }
-            this.postConnectionOnce.splice(0, i)
+            this.postConnectionOnce.splice(0, i);
         });
         this.socket.on("disconnect", () => {
             this.connected = false;
@@ -65,11 +66,13 @@ class APIConnection {
     }
 
     async attemptToResumeSession() {
-        this.resumeSession().then(() => {
-            this.navigate(`/waiting-room`)
-        }).catch(() => {
-            console.log("Session not found")
-        })
+        this.resumeSession()
+            .then(() => {
+                this.navigate(`/waiting-room`);
+            })
+            .catch(() => {
+                console.log("Session not found");
+            });
     }
 
     async attemptToResumeChat() {
@@ -112,7 +115,6 @@ class APIConnection {
         });
     }
 
-
     async resumeSession() {
         const sessionResponse = await this.emit("resume-session", {
             sessionId: retrieveSessionId(),
@@ -145,7 +147,7 @@ class APIConnection {
             }
 
             const emitToSocket = () => {
-                this.socket.emit(event, sendData, response => {
+                this.socket.emit(event, sendData, (response) => {
                     if (response) {
                         if (response.code < 0) {
                             reject(response);
@@ -172,7 +174,7 @@ class APIConnection {
     }
 
     on(event, callback) {
-        this.socket.on(event, data => {
+        this.socket.on(event, (data) => {
             callback(data); // Process data here
         });
         this.postConnectionHooks.push(() => {
@@ -186,7 +188,7 @@ class APIConnection {
         return this.emit("send-message", {
             chatId,
             message,
-        })
+        });
     }
 }
 

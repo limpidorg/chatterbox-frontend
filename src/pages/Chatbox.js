@@ -1,9 +1,6 @@
-/* eslint-disable react/jsx-boolean-value */
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
-import { useParams, withRouter } from "react-router";
-import { useHistory } from "react-router-dom";
-import { collisionVelocity, Particles } from "react-tsparticles";
+import React from "react";
+import { withRouter } from "react-router";
+import { Particles } from "react-tsparticles";
 import multiavatar from "@multiavatar/multiavatar";
 import {
     ActionBar,
@@ -17,157 +14,179 @@ import Cross from "../components/chatbox/Cross";
 import DrawingArea from "../components/DrawingArea";
 import { Connection } from "../lib/apiconnect";
 
-
-
-
+function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
+}
 
 class Chatbox extends React.Component {
     constructor(props) {
         super(props);
-        const { match } = this.props
+        const { match } = this.props;
         this.state = {
             message: "",
             loading: "Connecting",
             id: match.params.id,
             conversation: [],
-        }
+        };
 
-        const { id } = this.state
+        this.avatar1 = multiavatar(getRandomInt(1000));
+        this.avatar2 = multiavatar(getRandomInt(1000));
 
-        Connection.resumeSession().then(() => {
-            Connection.joinChat(id).then((res) => {
+        const { id } = this.state;
+
+        Connection.resumeSession()
+            .then(() => {
+                Connection.joinChat(id)
+                    .then((res) => {
+                        this.setState({
+                            loading: null,
+                            conversation: res.conversations,
+                        });
+                    })
+                    .catch((e) => {
+                        window.$alert.present(
+                            "Could not join the chat",
+                            e.message,
+                            [
+                                {
+                                    title: "OK",
+                                    type: "normal",
+                                    handler: () => {
+                                        this.setState({
+                                            loading: e.message,
+                                        });
+                                        Connection.navigate("/");
+                                    },
+                                },
+                            ]
+                        );
+                    });
+                // Register for chat destoryed event
+                Connection.on("chat-destroyed", (data) => {
+                    if (data.chatId === id) {
+                        window.$alert.present(
+                            "The chat has been closed.",
+                            "Either you or your chatling closed the chat.",
+                            [
+                                {
+                                    title: "OK",
+                                    type: "normal",
+                                    handler: () => {
+                                        Connection.navigate("/");
+                                    },
+                                },
+                            ]
+                        );
+                    }
+                });
+                Connection.on("new-message", (data) => {
+                    if (
+                        data.chatId === id &&
+                        this.messageNotInConversation(data.messageId)
+                    ) {
+                        this.pushMessage(data.message);
+                    }
+                });
+            })
+            .catch(() => {
+                window.$alert.present(
+                    "The session is no longer active",
+                    "Please start a new session."
+                );
+            });
+    }
+
+    handleChange(ev) {
+        this.setState({
+            message: ev.target.value,
+        });
+    }
+
+    handleSend() {
+        const { message, id } = this.state;
+        Connection.sendMessage(id, message)
+            .then(() => {
                 this.setState({
-                    loading: null,
-                    conversation: res.conversations
-                })
-            }).catch((e) => {
-                window.$alert.present("Could not join the chat", e.message, [
+                    message: "",
+                });
+            })
+            .catch((e) => {
+                window.$alert.present("Could not send message", e.message, [
                     {
                         title: "OK",
                         type: "normal",
                         handler: () => {
                             this.setState({
                                 loading: e.message,
-                            })
-                            Connection.navigate("/")
-                        }
-                    }
+                            });
+                            Connection.navigate("/");
+                        },
+                    },
                 ]);
-            })
-            // Register for chat destoryed event
-            Connection.on('chat-destroyed', (data) => {
-                if (data.chatId === id) {
-                    window.$alert.present('The chat has been closed.', 'Either you or your chatling closed the chat.', [
-                        {
-                            title: 'OK',
-                            type: 'normal',
-                            handler: () => {
-                                Connection.navigate('/')
-                            }
-                        }
-                    ])
-
-                }
-            })
-            Connection.on('new-message', (data) => {
-                if (data.chatId === id && this.messageNotInConversation(data.messageId)) {
-                    this.pushMessage(data.message);
-                }
-            })
-        }).catch(() => {
-            window.$alert.present("The session is no longer active", "Please start a new session.");
-        })
-
+            });
     }
 
-
-    handleChange(ev) {
-        this.setState({
-            message: ev.target.value
-        })
-    };
-
-    handleSend() {
-        const { message, id } = this.state
-        Connection.sendMessage(id, message).then((res) => {
-            this.setState({
-                message: "",
-            })
-        }).catch((e) => {
-            window.$alert.present("Could not send message", e.message, [
-                {
-                    title: "OK",
-                    type: "normal",
-                    handler: () => {
-                        this.setState({
-                            loading: e.message
-                        })
-                        Connection.navigate("/")
-                    }
-                }
-            ]);
-        })
-
-    };
-
-
     handleLeave() {
-        const { id } = this.state
-        window.$alert.present("Do you want to end the chat?", "You won't be able to come back.", [
-            {
-                title: "No",
-                type: "cancel"
-            }, {
-                title: "Yes",
-                type: "destructive",
-                handler: () => {
-                    Connection.leaveChat(id).then(() => {
-                        this.setState({
-                            loading: "Leaving"
-                        })
-                        Connection.navigate("/");
-                    }).catch((e) => {
-                        window.$alert.present("Could not leave the chat", e.message, [
-                            {
-                                title: "OK",
-                                type: "normal",
-                                handler: () => {
-                                    Connection.navigate("/")
-                                }
-                            }
-                        ]);
-                    })
-                }
-            }
-        ])
-    };
+        const { id } = this.state;
+        window.$alert.present(
+            "Do you want to end the chat?",
+            "You won't be able to come back.",
+            [
+                {
+                    title: "No",
+                    type: "cancel",
+                },
+                {
+                    title: "Yes",
+                    type: "destructive",
+                    handler: () => {
+                        Connection.leaveChat(id)
+                            .then(() => {
+                                this.setState({
+                                    loading: "Leaving",
+                                });
+                                Connection.navigate("/");
+                            })
+                            .catch((e) => {
+                                window.$alert.present(
+                                    "Could not leave the chat",
+                                    e.message,
+                                    [
+                                        {
+                                            title: "OK",
+                                            type: "normal",
+                                            handler: () => {
+                                                Connection.navigate("/");
+                                            },
+                                        },
+                                    ]
+                                );
+                            });
+                    },
+                },
+            ]
+        );
+    }
 
     pushMessage(newMessage) {
-        const { conversation } = this.state
-        console.log(conversation, newMessage)
+        const { conversation } = this.state;
         this.setState({
-            conversation: [...conversation, newMessage]
-        })
+            conversation: [...conversation, newMessage],
+        });
     }
 
     messageNotInConversation(messageId) {
-        const { conversation } = this.state
+        const { conversation } = this.state;
         for (let i = 0; i < conversation.length; i++) {
             if (conversation[i].messageId === messageId) {
                 return false;
             }
         }
-        return true
+        return true;
     }
 
-
-
-
     render() {
-        const avatar1 = multiavatar("Binx Bond");
-        const avatar2 = multiavatar("Binx Bond");
-        const { message, loading, id, conversation } = this.state
-
+        const { message, loading, conversation } = this.state;
 
         const date = new Date();
 
@@ -310,9 +329,11 @@ class Chatbox extends React.Component {
                     <Container>
                         <Box>
                             <Content>
-                                <Cross handleLeave={() => {
-                                    this.handleLeave()
-                                }} />
+                                <Cross
+                                    handleLeave={() => {
+                                        this.handleLeave();
+                                    }}
+                                />
                                 <h2>
                                     {days[date.getUTCDay()]},{" "}
                                     <span>
@@ -327,9 +348,9 @@ class Chatbox extends React.Component {
                                             key={el.messageId}
                                             avatar={
                                                 el.sessionId !==
-                                                    Connection.sessionId
-                                                    ? avatar1
-                                                    : avatar2
+                                                Connection.sessionId
+                                                    ? this.avatar1
+                                                    : this.avatar2
                                             }
                                             self={
                                                 el.sessionId !==
@@ -346,7 +367,7 @@ class Chatbox extends React.Component {
                                     type="text"
                                     placeholder="Compose your message..."
                                     onChange={(ev) => {
-                                        this.handleChange(ev)
+                                        this.handleChange(ev);
                                     }}
                                     value={message}
                                     onKeyDown={(ev) => {
@@ -355,9 +376,12 @@ class Chatbox extends React.Component {
                                         }
                                     }}
                                 />
-                                <button type="button" onClick={() => {
-                                    this.handleSend()
-                                }}>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        this.handleSend();
+                                    }}
+                                >
                                     Send
                                 </button>
                             </ActionBar>
@@ -366,11 +390,7 @@ class Chatbox extends React.Component {
                 )}
             </>
         );
-
-
-
     }
 }
-
 
 export default withRouter(Chatbox);

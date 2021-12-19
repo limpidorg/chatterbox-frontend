@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import { ThemeProvider } from "styled-components";
 import { useHistory } from "react-router";
@@ -11,8 +12,7 @@ import "./index.css";
 import { Connection } from "./lib/apiconnect";
 
 function App() {
-    // const location = useLocation()
-    const history = useHistory()
+    const history = useHistory();
     const theme = {
         mainColors: {
             darkBlue: "#5b9cae",
@@ -21,17 +21,10 @@ function App() {
             grey: "#949494",
         },
     };
+
     // GOOGLE ANALYTICS
 
     useEffect(() => {
-        // if (location.pathname.startsWith("/chat/")) {
-        //     Connection.attemptToResumeChat();
-        // } else if (location.pathname.startsWith("/waiting-room")) {
-        //     // Do nothing
-        // } else {
-        //     // Connection.attemptToResumeSession();
-        // }
-
         Connection.on("session-destroyed", () => {
             history.replace("/");
             window.$alert.present(
