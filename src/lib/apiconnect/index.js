@@ -1,5 +1,7 @@
 import io from 'socket.io-client';
 
+const DEVELOPER_MODE_NO_REDIRECT = true
+
 
 function storeSessionId(id) {
     localStorage.setItem('sessionId', id);
@@ -38,6 +40,10 @@ class APIConnection {
     }
 
     async navigate(path) {
+        if(DEVELOPER_MODE_NO_REDIRECT) {
+            // Dev
+            return
+        }
         if (this.history) {
             this.history.push(path)
         } else {
