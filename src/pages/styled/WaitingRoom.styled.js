@@ -5,7 +5,7 @@ export const Container = styled.div`
 
     font-family: "Orbitron";
 
-    padding-top: 150px;
+    padding: 150px 15px 0 15px;
 
     h1 {
         position: relative;
@@ -17,5 +17,11 @@ export const Container = styled.div`
         text-align: center;
         word-break: break-word;
         color: white;
+    }
+
+    @media screen and (max-width: 768px) {
+        h1 {
+            font-size: 1.75rem;
+        }
     }
 `;
