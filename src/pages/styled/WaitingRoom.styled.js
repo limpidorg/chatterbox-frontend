@@ -5,7 +5,7 @@ export const Container = styled.div`
 
     font-family: "Orbitron";
 
-    padding-top: 150px;
+    padding: 150px 15px 0 15px;
 
     h1 {
         position: relative;
