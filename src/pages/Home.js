@@ -19,10 +19,23 @@ class Home extends React.Component {
             discord: "",
             invalidDiscordTag: false,
             hasJoinedDiscord: true,
-            loading: null,
+            loading: "Loading your session...",
             isLoggedIn: false,
+            activeChat: null,
         };
         Connection.updateHistory(props.history);
+        Connection.resumeSession().then((res) => {
+            this.setState({
+                isLoggedIn: true,
+                loading: null,
+                activeChat: res.chatId
+            });
+        }).catch(() => {
+            this.setState({
+                isLoggedIn: false,
+                loading: null,
+            });
+        })
     }
 
     handleChange(ev) {
@@ -181,7 +194,13 @@ class Home extends React.Component {
             hasJoinedDiscord,
             loading,
             isLoggedIn,
+            activeChat
         } = this.state;
+
+        const {
+            history
+        } = this.props
+
         return (
             <Container>
                 <Centered>
@@ -213,14 +232,22 @@ class Home extends React.Component {
                                                 style={{
                                                     cursor: "pointer",
                                                 }}
+                                                onClick={() => {
+                                                    history.replace('/waiting-room');
+                                                }}
                                             >
-                                                Resume chat
+                                                {activeChat ? "Resume Chat" : "New Chat"}
                                             </button>
                                             <button
                                                 type="button"
                                                 className="choices"
                                                 style={{
                                                     cursor: "pointer",
+                                                }}
+                                                onClick={() => {
+                                                    Connection.destroySession(Connection.sessionId).then(() => {
+                                                        window.location.href = "/";
+                                                    })
                                                 }}
                                             >
                                                 Reset my identity
@@ -247,9 +274,9 @@ class Home extends React.Component {
                                                     style={
                                                         invalidDiscordTag
                                                             ? {
-                                                                  border:
-                                                                      "2px solid red",
-                                                              }
+                                                                border:
+                                                                    "2px solid red",
+                                                            }
                                                             : {}
                                                     }
                                                     onKeyDown={(ev) => {

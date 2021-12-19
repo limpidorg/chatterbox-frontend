@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { ThemeProvider } from "styled-components";
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router";
 import { Route, Switch } from "react-router-dom";
 import { Alert } from "./components/alert";
 import Home from "./pages/Home";
@@ -11,7 +11,7 @@ import "./index.css";
 import { Connection } from "./lib/apiconnect";
 
 function App() {
-    const location = useLocation()
+    // const location = useLocation()
     const history = useHistory()
     const theme = {
         mainColors: {
@@ -24,13 +24,13 @@ function App() {
     // GOOGLE ANALYTICS
 
     useEffect(() => {
-        if (location.pathname.startsWith("/chat/")) {
-            Connection.attemptToResumeChat();
-        } else if (location.pathname.startsWith("/waiting-room")) {
-            // Do nothing
-        } else {
-            Connection.attemptToResumeSession();
-        }
+        // if (location.pathname.startsWith("/chat/")) {
+        //     Connection.attemptToResumeChat();
+        // } else if (location.pathname.startsWith("/waiting-room")) {
+        //     // Do nothing
+        // } else {
+        //     // Connection.attemptToResumeSession();
+        // }
 
         Connection.on("session-destroyed", () => {
             history.replace('/')
