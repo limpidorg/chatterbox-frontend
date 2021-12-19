@@ -68,7 +68,7 @@ class Home extends React.Component {
             hasJoinedDiscord: true,
         });
 
-        const { discord } = this.state;
+        const { discord, username } = this.state;
 
         if (this.isDiscordTagInvalid() === true) {
             window.$alert.present(
@@ -93,14 +93,14 @@ class Home extends React.Component {
         }
 
         Connection.emit("discord-verification", {
-            discordId: discord,
+            discordId: discord
         })
             .then(() => {
                 this.setState({
                     loading: "Starting a new session...",
                 });
 
-                Connection.newSession(discord)
+                Connection.newSession(discord, username)
                     .then((sessionInfo) => {
                         this.setState({
                             loading: `Connecting to session ${sessionInfo.sessionId}`,
@@ -182,10 +182,11 @@ class Home extends React.Component {
 
     continueWithoutDiscord() {
         const { history } = this.props;
+        const { name } = this.state
         this.setState({
             loading: "Starting a new session...",
         });
-        Connection.newSession().then((sessionInfo) => {
+        Connection.newSession(null, name).then((sessionInfo) => {
             this.setState(
                 {
                     loading: `Connecting to session ${sessionInfo.sessionId}`,
@@ -290,9 +291,9 @@ class Home extends React.Component {
                                                         style={
                                                             invalidDiscordTag
                                                                 ? {
-                                                                      border:
-                                                                          "2px solid red",
-                                                                  }
+                                                                    border:
+                                                                        "2px solid red",
+                                                                }
                                                                 : {}
                                                         }
                                                         onKeyDown={(ev) => {
@@ -313,7 +314,7 @@ class Home extends React.Component {
                                                         className="form-field"
                                                         type="text"
                                                         maxLength={40}
-                                                        placeholder="Enter your username"
+                                                        placeholder="What do you want to be called?"
                                                         value={username}
                                                         onChange={(event) => {
                                                             this.handleUsernameChange(
