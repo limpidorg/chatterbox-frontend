@@ -37,7 +37,7 @@ class Chatbox extends React.Component {
         Connection.resumeSession()
             .then(() => {
                 Connection.joinChat(id)
-                    .then(res => {
+                    .then((res) => {
                         this.setState(
                             {
                                 loading: null,
@@ -48,7 +48,7 @@ class Chatbox extends React.Component {
                             }
                         );
                     })
-                    .catch(e => {
+                    .catch((e) => {
                         window.$alert.present(
                             "Could not join the chat",
                             e.message,
@@ -67,7 +67,7 @@ class Chatbox extends React.Component {
                         );
                     });
                 // Register for chat destoryed event
-                Connection.on("chat-destroyed", data => {
+                Connection.on("chat-destroyed", (data) => {
                     if (data.chatId === id) {
                         window.$alert.present(
                             "The chat has been closed.",
@@ -84,7 +84,7 @@ class Chatbox extends React.Component {
                         );
                     }
                 });
-                Connection.on("new-message", data => {
+                Connection.on("new-message", (data) => {
                     if (data.chatId === id) {
                         const messageIndex = this.getMessageIndex(
                             data.messageId
@@ -121,7 +121,7 @@ class Chatbox extends React.Component {
         }
         Connection.sendMessage(id, message)
             .then(() => {})
-            .catch(e => {
+            .catch((e) => {
                 window.$alert.present("Could not send message", e.message, [
                     {
                         title: "OK",
@@ -155,7 +155,7 @@ class Chatbox extends React.Component {
                                 });
                                 Connection.navigate("/");
                             })
-                            .catch(e => {
+                            .catch((e) => {
                                 window.$alert.present(
                                     "Could not leave the chat",
                                     e.message,
@@ -195,7 +195,7 @@ class Chatbox extends React.Component {
     }
 
     async pushMessage(newMessage) {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             const { conversation } = this.state;
             this.setState(
                 {
@@ -365,7 +365,7 @@ class Chatbox extends React.Component {
                                     </span>{" "}
                                     {date.getFullYear()}
                                 </h2>
-                                {conversation.map(el => {
+                                {conversation.map((el) => {
                                     return (
                                         <Message
                                             key={el.messageId}
@@ -386,7 +386,7 @@ class Chatbox extends React.Component {
                                 })}
                                 <div
                                     style={{ float: "left", clear: "both" }}
-                                    ref={el => {
+                                    ref={(el) => {
                                         this.messagesEnd = el;
                                     }}
                                 />
@@ -395,11 +395,12 @@ class Chatbox extends React.Component {
                                 <input
                                     type="text"
                                     placeholder="Compose your message..."
-                                    onChange={ev => {
+                                    onChange={(ev) => {
                                         this.handleChange(ev);
                                     }}
                                     value={message}
-                                    onKeyDown={ev => {
+                                    maxLength={70}
+                                    onKeyDown={(ev) => {
                                         if (ev.key === "Enter") {
                                             this.handleSend();
                                         }
