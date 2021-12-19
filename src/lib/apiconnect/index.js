@@ -12,7 +12,7 @@ function retrieveSessionId() {
 }
 
 class APIConnection {
-    constructor({ APIEndpoint = "http://lincolns-imac.local:5051" } = {}) {
+    constructor({ APIEndpoint = "http://localhost:5051" } = {}) {
         this.APIEndpoint = APIEndpoint;
         this.socket = io(this.APIEndpoint);
         this.connected = false;
@@ -53,29 +53,30 @@ class APIConnection {
             return
         }
         if (this.history) {
-            this.history.push(path)
+            this.history.replace(path)
         } else {
             window.location.href = path
         }
     }
 
     async attemptToResumeSession() {
-        this.resumeSession().then((sessionInfo) => {
-            window.$alert.present("Do you want to return to your previous session?", "Pressing no will destroy the previous session and all your previously-entered personal information to keep your identity secure.", [
-                {
-                    title: "No",
-                    type: "destructive",
-                    handler: () => {
-                        this.destroySession(sessionInfo.sessionId);
-                    }
-                }, {
-                    title: "Yes",
-                    type: "normal",
-                    handler: () => {
-                        this.navigate(`/waiting-room`)
-                    }
-                }
-            ])
+        this.resumeSession().then(() => {
+            // window.$alert.present("Do you want to return to your previous session?", "Pressing no will destroy the previous session and all your previously-entered personal information to keep your identity secure.", [
+            //     {
+            //         title: "No",
+            //         type: "destructive",
+            //         handler: () => {
+            //             this.destroySession(sessionInfo.sessionId);
+            //         }
+            //     }, {
+            //         title: "Yes",
+            //         type: "normal",
+            //         handler: () => {
+            //             this.navigate(`/waiting-room`)
+            //         }
+            //     }
+            // ])
+            this.navigate(`/waiting-room`)
         }).catch(() => {
             console.log("Session not found")
         })
@@ -104,8 +105,17 @@ class APIConnection {
     }
 
     async joinChat(chatId) {
-        this.navigate(`/chat/${chatId}`)
+        return this.emit("join-chat", {
+            chatId
+        })
     }
+
+    async leaveChat(chatId) {
+        return this.emit("leave-chat", {
+            chatId
+        })
+    }
+
 
     async resumeSession() {
         const sessionResponse = await this.emit("resume-session", {

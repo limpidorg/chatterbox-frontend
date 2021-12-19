@@ -77,9 +77,8 @@ class WaitingRoom extends React.Component {
             })
             return
         }
-        Connection.joinChat(chatId).then(() => {
-
-        })
+        const { history } = this.props;
+        history.replace(`/chat/${chatId}`);
     }
 
     async matchChat() {
