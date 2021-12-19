@@ -29,21 +29,36 @@ const Chatbox = () => {
 
     useEffect(() => {
         // Init - Join chat
-        Connection.joinChat(id)
-            .then((res) => {
-                setConversation(res.conversations);
-            })
-            .catch((e) => {
-                window.$alert.present("Could not join the chat", e.message, [
+        Connection.joinChat(id).then((res) => {
+            setConversation(res.conversations);
+            setLoading(null);
+        }).catch((e) => {
+            window.$alert.present("Could not join the chat", e.message, [
+                {
+                    title: "OK",
+                    type: "normal",
+                    handler: () => {
+                        setLoading(e.message);
+                        Connection.navigate("/")
+                    }
+                }
+            ]);
+        })
+        // Register for chat destoryed event
+        Connection.on('chat-destroyed', (data) => {
+            if (data.chatId === id) {
+                window.$alert.present('The chat has been closed.', 'Either you or your chatling closed the chat.', [
                     {
-                        title: "OK",
-                        type: "normal",
+                        title: 'OK',
+                        type: 'normal',
                         handler: () => {
-                            Connection.navigate("/");
-                        },
-                    },
-                ]);
-            });
+                            Connection.navigate('/')
+                        }
+                    }
+                ])
+
+            }
+        })
     }, []);
 
     console.log(`The id of this room is ${id}`);
@@ -57,41 +72,31 @@ const Chatbox = () => {
     };
 
     const handleLeave = () => {
-        window.$alert.present(
-            "Do you want to end the chat?",
-            "You won't be able to come back.",
-            [
-                {
-                    title: "No",
-                    type: "cancel",
-                },
-                {
-                    title: "Yes",
-                    type: "destructive",
-                    handler: () => {
-                        Connection.leaveChat(id)
-                            .then(() => {
-                                setLoading("Leaving...");
-                            })
-                            .catch((e) => {
-                                window.$alert.present(
-                                    "Could not leave the chat",
-                                    e.message,
-                                    [
-                                        {
-                                            title: "OK",
-                                            type: "normal",
-                                            handler: () => {
-                                                Connection.navigate("/");
-                                            },
-                                        },
-                                    ]
-                                );
-                            });
-                    },
-                },
-            ]
-        );
+        window.$alert.present("Do you want to end the chat?", "You won't be able to come back.", [
+            {
+                title: "No",
+                type: "cancel"
+            }, {
+                title: "Yes",
+                type: "destructive",
+                handler: () => {
+                    Connection.leaveChat(id).then(() => {
+                        setLoading("Leaving...");
+                        Connection.navigate("/");
+                    }).catch((e) => {
+                        window.$alert.present("Could not leave the chat", e.message, [
+                            {
+                                title: "OK",
+                                type: "normal",
+                                handler: () => {
+                                    Connection.navigate("/")
+                                }
+                            }
+                        ]);
+                    })
+                }
+            }
+        ])
     };
 
     const avatar1 = multiavatar("Binx Bond");

@@ -1,6 +1,6 @@
 import io from "socket.io-client";
 
-const DEVELOPER_MODE_NO_REDIRECT = true;
+const DEVELOPER_MODE_NO_REDIRECT = false;
 
 function storeSessionId(id) {
     localStorage.setItem("sessionId", id);
@@ -59,28 +59,12 @@ class APIConnection {
     }
 
     async attemptToResumeSession() {
-        this.resumeSession()
-            .then(() => {
-                // window.$alert.present("Do you want to return to your previous session?", "Pressing no will destroy the previous session and all your previously-entered personal information to keep your identity secure.", [
-                //     {
-                //         title: "No",
-                //         type: "destructive",
-                //         handler: () => {
-                //             this.destroySession(sessionInfo.sessionId);
-                //         }
-                //     }, {
-                //         title: "Yes",
-                //         type: "normal",
-                //         handler: () => {
-                //             this.navigate(`/waiting-room`)
-                //         }
-                //     }
-                // ])
-                this.navigate(`/waiting-room`);
-            })
-            .catch(() => {
-                console.log("Session not found");
-            });
+
+        this.resumeSession().then(() => {
+            this.navigate(`/waiting-room`)
+        }).catch(() => {
+            console.log("Session not found")
+        })
     }
 
     async attemptToResumeChat() {
