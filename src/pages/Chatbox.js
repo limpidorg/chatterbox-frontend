@@ -214,13 +214,13 @@ class Chatbox extends React.Component {
         const date = new Date();
 
         const days = [
+            "Sunday",
             "Monday",
             "Tuesday",
             "Wednesday",
             "Thursday",
             "Friday",
             "Saturday",
-            "Sunday",
         ];
 
         const months = [
