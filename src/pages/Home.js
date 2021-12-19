@@ -83,7 +83,7 @@ class Home extends React.Component {
                             loading: `Connecting to session ${sessionInfo.sessionId}`,
                         });
                         const { history } = this.props;
-                        history.push("/waiting-room");
+                        history.replace("/waiting-room");
                     })
                     .catch(() => [
                         window.$alert.present(
@@ -168,7 +168,7 @@ class Home extends React.Component {
                     loading: `Connecting to session ${sessionInfo.sessionId}`,
                 },
                 () => {
-                    history.push("/waiting-room");
+                    history.replace("/waiting-room");
                 }
             );
         });

@@ -1,16 +1,40 @@
 /* eslint-disable react/jsx-boolean-value */
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { useHistory } from "react-router-dom"
 import { ActionBar, Box, Container, Content } from "./styled/Chatbox.styled";
 import Message from "../components/chatbox/Message";
 import Cross from "../components/chatbox/Cross";
 import DrawingArea from "../components/DrawingArea";
+import { Connection } from "../lib/apiconnect";
 
 const Chatbox = () => {
     const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState("Connecting...");
 
     const { id } = useParams();
+    const { history } = useHistory();
+    console.log(history)
+
+    const [conversation, setConversation] = useState([]);
+
+    useEffect(() => {
+        // Init - Join chat
+        Connection.joinChat(id).then((res) => {
+            setConversation(res.conversations);
+        }).catch((e) => {
+            window.$alert.present("Could not join the chat", e.message, [
+                {
+                    title: "OK",
+                    type: "normal",
+                    handler: () => {
+                        Connection.navigate("/")
+                    }
+                }
+            ]);
+        })
+    }, []);
 
     console.log(`The id of this room is ${id}`);
 
@@ -23,31 +47,34 @@ const Chatbox = () => {
     };
 
     const handleLeave = () => {
-        console.log("leaving");
+        window.$alert.present("Do you want to end the chat?", "You won't be able to come back.", [
+            {
+                title: "No",
+                type: "cancel"
+            }, {
+                title: "Yes",
+                type: "destructive",
+                handler: () => {
+                    Connection.leaveChat(id).then(() => {
+                        setLoading("Leaving...");
+                    }).catch((e) => {
+                        window.$alert.present("Could not leave the chat", e.message, [
+                            {
+
+                                title: "OK",
+                                type: "normal",
+                                handler: () => {
+                                    Connection.navigate("/")
+                                }
+                            }
+                        ]);
+                    })
+                }
+            }
+        ])
     };
 
     const avatarPath = `${process.env.PUBLIC_URL}/images/avatar.png`;
-
-    const conversation = [
-        { author: "Jack", content: "Hello" },
-        { author: "Tom", content: "Hi there" },
-        { author: "Tom", content: "How are you doing" },
-        { author: "Jack", content: "Bonsaï is the best frontend web dev" },
-        { author: "Tom", content: "I agree" },
-        { author: "Jack", content: "I agree" },
-        { author: "Tom", content: "Hello, how are you doing" },
-        { author: "Tom", content: "I agree" },
-        { author: "Jack", content: "I agree" },
-        { author: "Jack", content: "Hello, how are you doing" },
-        { author: "Tom", content: "I agree" },
-        { author: "Jack", content: "I agree" },
-        { author: "Tom", content: "Hello, how are you doing" },
-        { author: "Tom", content: "I agree" },
-        { author: "Jack", content: "I agree" },
-        { author: "Tom", content: "Hello, how are you doing" },
-    ];
-
-    const self = "Jack";
 
     const date = new Date();
 
@@ -93,11 +120,10 @@ const Chatbox = () => {
                         {conversation.map((el) => {
                             return (
                                 <Message
-                                    key={el.content}
-                                    self={el.author !== self}
-                                    avatarPath={avatarPath}
+                                    key={el.messageId}
+                                    self={el.sessionId !== Connection.sessionId}
                                 >
-                                    {el.content}
+                                    {el.message}
                                 </Message>
                             );
                         })}

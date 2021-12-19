@@ -52,39 +52,33 @@ class APIConnection {
             return;
         }
         if (this.history) {
-            this.history.push(path);
+            this.history.replace(path)
         } else {
             window.location.href = path;
         }
     }
 
     async attemptToResumeSession() {
-        this.resumeSession()
-            .then((sessionInfo) => {
-                window.$alert.present(
-                    "Do you want to return to your previous session?",
-                    "Pressing no will destroy the previous session and all your previously-entered personal information to keep your identity secure.",
-                    [
-                        {
-                            title: "No",
-                            type: "destructive",
-                            handler: () => {
-                                this.destroySession(sessionInfo.sessionId);
-                            },
-                        },
-                        {
-                            title: "Yes",
-                            type: "normal",
-                            handler: () => {
-                                this.navigate(`/waiting-room`);
-                            },
-                        },
-                    ]
-                );
-            })
-            .catch(() => {
-                console.log("Session not found");
-            });
+        this.resumeSession().then(() => {
+            // window.$alert.present("Do you want to return to your previous session?", "Pressing no will destroy the previous session and all your previously-entered personal information to keep your identity secure.", [
+            //     {
+            //         title: "No",
+            //         type: "destructive",
+            //         handler: () => {
+            //             this.destroySession(sessionInfo.sessionId);
+            //         }
+            //     }, {
+            //         title: "Yes",
+            //         type: "normal",
+            //         handler: () => {
+            //             this.navigate(`/waiting-room`)
+            //         }
+            //     }
+            // ])
+            this.navigate(`/waiting-room`)
+        }).catch(() => {
+            console.log("Session not found")
+        })
     }
 
     async attemptToResumeChat() {
@@ -116,8 +110,17 @@ class APIConnection {
     }
 
     async joinChat(chatId) {
-        this.navigate(`/chat/${chatId}`);
+        return this.emit("join-chat", {
+            chatId
+        })
     }
+
+    async leaveChat(chatId) {
+        return this.emit("leave-chat", {
+            chatId
+        })
+    }
+
 
     async resumeSession() {
         const sessionResponse = await this.emit("resume-session", {
