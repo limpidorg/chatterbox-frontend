@@ -1,14 +1,15 @@
 import React from "react";
 import { withRouter } from "react-router";
-import Particles from "react-tsparticles";
+import ParticleBackground from "../components/ParticleBackground";
 import { Connection } from "../lib/apiconnect";
-import { Container } from "./styled/WaitingRoom.styled";
+import { LoadingContainer } from "./styled/WaitingRoom.styled";
 
 class WaitingRoom extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             loading: "Searching for your next adventure...",
+            gifX: -110,
         };
         const { history } = this.props;
 
@@ -17,15 +18,15 @@ class WaitingRoom extends React.Component {
         // Check for the validity of current session
 
         Connection.resumeSession()
-            .then(sessionInfo => {
+            .then((sessionInfo) => {
                 if (sessionInfo.chatId) {
                     this.joinChat(sessionInfo.chatId);
                 } else {
                     this.matchChat()
-                        .then(chatId => {
+                        .then((chatId) => {
                             this.joinChat(chatId);
                         })
-                        .catch(e => {
+                        .catch((e) => {
                             Connection.destroySession(
                                 Connection.sessionId
                             ).then(() => {
@@ -53,6 +54,26 @@ class WaitingRoom extends React.Component {
                     "You session is no longer active. Please create a new session."
                 );
             });
+    }
+
+    componentDidMount() {
+        this.interval = setInterval(() => {
+            this.setState((prevState) => {
+                if (prevState.gifX === -15) {
+                    return {
+                        gifX: -110,
+                    };
+                } else {
+                    return {
+                        gifX: prevState.gifX + 5,
+                    };
+                }
+            });
+        }, 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     joinChat(chatId) {
@@ -93,7 +114,7 @@ class WaitingRoom extends React.Component {
                 loading:
                     "Asking for permission to enter chatterbox universe...",
             });
-            Connection.on("new-chat-found", res => {
+            Connection.on("new-chat-found", (res) => {
                 resolve(res.chatId);
             });
             Connection.emit("new-chat-request")
@@ -103,119 +124,26 @@ class WaitingRoom extends React.Component {
                             "The universe is huge but we're trying our best to find your CHATLING...",
                     });
                 })
-                .catch(e => {
+                .catch((e) => {
                     reject(e);
                 });
         });
     }
 
     render() {
-        const { loading } = this.state;
+        const { loading, gifX } = this.state;
         return (
             <>
-                <Particles
-                    id="tsparticles"
-                    options={{
-                        background: {
-                            color: {
-                                value: "#043564",
-                            },
-                            image: "url('http://vincentgarreau.com/particles.js/assets/img/kbLd9vb_new.gif')",
-                            position: "0 50%",
-                            repeat: "no-repeat",
-                            size: "60%",
-                        },
-                        fullScreen: {
-                            zIndex: 1,
-                        },
-                        interactivity: {
-                            events: {
-                                onClick: {
-                                    enable: true,
-                                    mode: "repulse",
-                                },
-                                onHover: {
-                                    mode: "grab",
-                                },
-                            },
-                            modes: {
-                                bubble: {
-                                    distance: 400,
-                                    duration: 2,
-                                    opacity: 8,
-                                    size: 40,
-                                },
-                                grab: {
-                                    distance: 200,
-                                },
-                            },
-                        },
-                        particles: {
-                            color: {
-                                value: "#ffffff",
-                            },
-                            links: {
-                                color: {
-                                    value: "#ffffff",
-                                },
-                                distance: 150,
-                                opacity: 0.4,
-                            },
-                            move: {
-                                attract: {
-                                    rotate: {
-                                        x: 600,
-                                        y: 1200,
-                                    },
-                                },
-                                direction: "left",
-                                enable: true,
-                                outModes: {
-                                    bottom: "out",
-                                    left: "out",
-                                    right: "out",
-                                    top: "out",
-                                },
-                                speed: 6,
-                                straight: true,
-                            },
-                            opacity: {
-                                value: 0.5,
-                                animation: {
-                                    speed: 1,
-                                    minimumValue: 0.1,
-                                },
-                            },
-                            shape: {
-                                options: {
-                                    star: {
-                                        sides: 5,
-                                    },
-                                },
-                                type: "star",
-                            },
-                            size: {
-                                random: {
-                                    enable: true,
-                                },
-                                value: {
-                                    min: 1,
-                                    max: 4,
-                                },
-                                animation: {
-                                    speed: 40,
-                                    minimumValue: 0.1,
-                                },
-                            },
-                        },
-                    }}
+                <ParticleBackground
+                    gifX={gifX}
+                    key={this.gifX}
+                    chatbox={false}
+                    size={4}
                 />
                 );
-                <Container>
-                    <h1>
-                        <span>{loading}</span>
-                    </h1>
-                </Container>
+                <LoadingContainer>
+                    <h1>{loading}</h1>
+                </LoadingContainer>
             </>
         );
     }

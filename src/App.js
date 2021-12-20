@@ -34,19 +34,15 @@ function App() {
         });
         Connection.on("show-alert", (res) => {
             const { title, message, actions } = res;
-            const actionCopy = [...actions || []]
+            const actionCopy = [...(actions || [])];
             for (let i = 0; i < actionCopy.length; i++) {
                 if (actionCopy[i].link) {
                     actionCopy[i].handler = () => {
                         window.open(actionCopy[i].link, "_blank");
-                    }
+                    };
                 }
             }
-            window.$alert.present(
-                title,
-                message,
-                actionCopy
-            );
+            window.$alert.present(title, message, actionCopy);
         });
     }, []);
 

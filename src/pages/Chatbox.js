@@ -1,18 +1,13 @@
 import React from "react";
 import { withRouter } from "react-router";
-import { Particles } from "react-tsparticles";
 import multiavatar from "@multiavatar/multiavatar";
-import {
-    ActionBar,
-    Box,
-    Container,
-    Content,
-    LoadingContainer,
-} from "./styled/Chatbox.styled";
+import { ActionBar, Box, Content, Container } from "./styled/Chatbox.styled";
+import { LoadingContainer } from "./styled/WaitingRoom.styled";
 import Message from "../components/chatbox/Message";
 import Cross from "../components/chatbox/Cross";
 import DrawingArea from "../components/DrawingArea";
 import { Connection } from "../lib/apiconnect";
+import ParticleBackground from "../components/ParticleBackground";
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
@@ -37,7 +32,7 @@ class Chatbox extends React.Component {
         Connection.resumeSession()
             .then(() => {
                 Connection.joinChat(id)
-                    .then(res => {
+                    .then((res) => {
                         this.setState(
                             {
                                 loading: null,
@@ -48,7 +43,7 @@ class Chatbox extends React.Component {
                             }
                         );
                     })
-                    .catch(e => {
+                    .catch((e) => {
                         window.$alert.present(
                             "Could not join the chat",
                             e.message,
@@ -67,7 +62,7 @@ class Chatbox extends React.Component {
                         );
                     });
                 // Register for chat destoryed event
-                Connection.on("chat-destroyed", data => {
+                Connection.on("chat-destroyed", (data) => {
                     if (data.chatId === id) {
                         window.$alert.present(
                             "The chat has been closed.",
@@ -84,7 +79,7 @@ class Chatbox extends React.Component {
                         );
                     }
                 });
-                Connection.on("new-message", data => {
+                Connection.on("new-message", (data) => {
                     if (data.chatId === id) {
                         const messageIndex = this.getMessageIndex(
                             data.messageId
@@ -121,7 +116,7 @@ class Chatbox extends React.Component {
         }
         Connection.sendMessage(id, message)
             .then(() => {})
-            .catch(e => {
+            .catch((e) => {
                 window.$alert.present("Could not send message", e.message, [
                     {
                         title: "OK",
@@ -155,7 +150,7 @@ class Chatbox extends React.Component {
                                 });
                                 Connection.navigate("/");
                             })
-                            .catch(e => {
+                            .catch((e) => {
                                 window.$alert.present(
                                     "Could not leave the chat",
                                     e.message,
@@ -195,7 +190,7 @@ class Chatbox extends React.Component {
     }
 
     async pushMessage(newMessage) {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             const { conversation } = this.state;
             this.setState(
                 {
@@ -243,108 +238,9 @@ class Chatbox extends React.Component {
                 <DrawingArea />
                 {loading && (
                     <>
-                        <Particles
-                            id="tsparticles"
-                            options={{
-                                background: {
-                                    color: {
-                                        value: "#5b9cae",
-                                    },
-                                    position: "50% 50%",
-                                    repeat: "no-repeat",
-                                    size: "cover",
-                                },
-                                fullScreen: {
-                                    zIndex: 1,
-                                },
-                                interactivity: {
-                                    events: {
-                                        onClick: {
-                                            enable: true,
-                                            mode: "repulse",
-                                        },
-                                        onHover: {
-                                            enable: true,
-                                            mode: "bubble",
-                                        },
-                                    },
-                                    modes: {
-                                        bubble: {
-                                            distance: 400,
-                                            duration: 0.3,
-                                            opacity: 1,
-                                            size: 5,
-                                        },
-                                        grab: {
-                                            distance: 400,
-                                            links: {
-                                                opacity: 0.5,
-                                            },
-                                        },
-                                    },
-                                },
-                                particles: {
-                                    links: {
-                                        color: {
-                                            value: "#ffffff",
-                                        },
-                                        distance: 500,
-                                        opacity: 0.4,
-                                        width: 2,
-                                    },
-                                    move: {
-                                        attract: {
-                                            rotate: {
-                                                x: 600,
-                                                y: 1200,
-                                            },
-                                        },
-                                        direction: "bottom",
-                                        enable: true,
-                                        outModes: {
-                                            bottom: "out",
-                                            left: "out",
-                                            right: "out",
-                                            top: "out",
-                                        },
-                                    },
-                                    number: {
-                                        density: {
-                                            enable: true,
-                                        },
-                                        value: 200,
-                                    },
-                                    opacity: {
-                                        random: {
-                                            enable: true,
-                                        },
-                                        value: {
-                                            min: 0.1,
-                                            max: 0.5,
-                                        },
-                                        animation: {
-                                            speed: 1,
-                                            minimumValue: 0.1,
-                                        },
-                                    },
-                                    size: {
-                                        random: {
-                                            enable: true,
-                                        },
-                                        value: {
-                                            min: 1,
-                                            max: 10,
-                                        },
-                                        animation: {
-                                            speed: 40,
-                                            minimumValue: 0.1,
-                                        },
-                                    },
-                                },
-                            }}
-                        />
+                        <ParticleBackground chatbox />
                         <LoadingContainer>
-                            <h1 className="loading">{loading}</h1>
+                            <h1>{loading}</h1>
                         </LoadingContainer>
                     </>
                 )}
@@ -365,7 +261,7 @@ class Chatbox extends React.Component {
                                     </span>{" "}
                                     {date.getFullYear()}
                                 </h2>
-                                {conversation.map(el => {
+                                {conversation.map((el) => {
                                     return (
                                         <Message
                                             key={el.messageId}
@@ -386,7 +282,7 @@ class Chatbox extends React.Component {
                                 })}
                                 <div
                                     style={{ float: "left", clear: "both" }}
-                                    ref={el => {
+                                    ref={(el) => {
                                         this.messagesEnd = el;
                                     }}
                                 />
@@ -395,12 +291,12 @@ class Chatbox extends React.Component {
                                 <input
                                     type="text"
                                     placeholder="Compose your message..."
-                                    onChange={ev => {
+                                    onChange={(ev) => {
                                         this.handleChange(ev);
                                     }}
                                     value={message}
                                     maxLength={70}
-                                    onKeyDown={ev => {
+                                    onKeyDown={(ev) => {
                                         if (ev.key === "Enter") {
                                             this.handleSend();
                                         }

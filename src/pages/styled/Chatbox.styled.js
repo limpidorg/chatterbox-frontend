@@ -1,21 +1,5 @@
 import styled from "styled-components";
 
-export const LoadingContainer = styled.div`
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    h1 {
-        z-index: 10;
-        color: white;
-        font-family: "Aeonik";
-        font-size: 3rem;
-        font-weight: normal;
-        text-align: center;
-    }
-`;
-
 export const Container = styled.div`
     font-family: "Aeonik";
 

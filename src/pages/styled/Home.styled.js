@@ -16,6 +16,7 @@ export const Container = styled.div`
 
     background-color: ${({ theme }) => theme.mainColors.lightBlue};
 
+
     h1 {
         margin: 0px;
 
