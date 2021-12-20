@@ -27,7 +27,7 @@ const ParticleBackground = ({ gifX, chatbox, size }) => {
     );
 
     return (
-        <>
+        <div>
             {!chatbox && (
                 <div
                     style={{
@@ -137,7 +137,7 @@ const ParticleBackground = ({ gifX, chatbox, size }) => {
                     },
                 }}
             />
-        </>
+        </div>
     );
 };
 
