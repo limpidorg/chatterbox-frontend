@@ -5,7 +5,7 @@ import { GifContainer } from "./styled/ParticleBackground.styled";
 const ParticleBackground = ({ chatbox, gifX }) => {
 
     return (
-        <>
+        <div>
             {!chatbox && (
                 <GifContainer
                     style={{
@@ -112,7 +112,7 @@ const ParticleBackground = ({ chatbox, gifX }) => {
                     },
                 }}
             />
-        </>
+        </div>
     );
 };
 

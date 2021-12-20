@@ -12,7 +12,7 @@ function retrieveSessionId() {
 }
 
 class APIConnection {
-    constructor({ APIEndpoint = "https://chatterboxapis.yyjlincoln.app" } = {}) {
+    constructor({ APIEndpoint = "http://localhost:3001" } = {}) {
         this.APIEndpoint = APIEndpoint;
         this.socket = io(this.APIEndpoint);
         this.connected = false;
@@ -177,6 +177,10 @@ class APIConnection {
         this.socket.on(event, (data) => {
             callback(data); // Process data here
         });
+    }
+
+    off(eventname, listener){
+        this.socket.off(eventname, listener);
     }
 
     async sendMessage(chatId, message) {
