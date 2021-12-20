@@ -19,6 +19,19 @@ export const LoadingContainer = styled.div`
         color: white;
     }
 
+    .cancel {
+        border: 2px solid white;
+        border-radius: 10px;
+        width: fit-content;
+        padding: 10px 20px 10px 20px;
+    }
+
+    .cancelContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     @media screen and (max-width: 768px) {
         h1 {
             font-size: 1.75rem;

@@ -22,18 +22,22 @@ class WaitingRoom extends React.Component {
                 if (sessionInfo.chatId) {
                     this.joinChat(sessionInfo.chatId);
                 } else {
-                    Connection.on("chat-request-cancelled", ()=>{
-                        window.$alert.present("Request Cancelled", "You cancelled the request to join a chat", [
-                            {
-                                title: "OK",
-                                type: "normal",
-                                handler: () => {
-                                    // history.replace("/");
-                                    window.location.href = "/";
-                                }
-                            },
-                        ])
-                    })
+                    Connection.on("chat-request-cancelled", () => {
+                        window.$alert.present(
+                            "Request Cancelled",
+                            "You cancelled the request to join a chat",
+                            [
+                                {
+                                    title: "OK",
+                                    type: "normal",
+                                    handler: () => {
+                                        // history.replace("/");
+                                        window.location.href = "/";
+                                    },
+                                },
+                            ]
+                        );
+                    });
                     this.matchChat()
                         .then((chatId) => {
                             this.joinChat(chatId);
@@ -165,22 +169,16 @@ class WaitingRoom extends React.Component {
                             flexDirection: "column",
                         }}
                     >
-                        <h1 style={{
-                            marginBottom: "1em",
-                            textAlign: "center",
-                        }} role="none" onClick={()=>{
-                            Connection.emit("cancel-chat-request")
-                        }}>Cancel</h1>
-                        <div style={{
-                            flexDirection: "row",
-                            justifyContent: "center",
-                            textAlign: "center",
-                        }}>
-                            <img src={`${process.env.PUBLIC_URL}/images/logo-transparent.png`} alt="Logo" style={{
-                                maxWidth: "400px",
-                                width: "50%"
-                            }} />
-                        </div>
+                        <div className="cancelContainer"><h1
+                            className="cancel"
+                            role="none"
+                            onClick={() => {
+                                Connection.emit("cancel-chat-request");
+                            }}
+                        >
+                            Cancel
+                        </h1></div>
+                        
                     </div>
                 </LoadingContainer>
             </>
