@@ -9,7 +9,7 @@ class WaitingRoom extends React.Component {
         super(props);
         this.state = {
             loading: "Searching for your next adventure...",
-            gifX: -110,
+            gifX: -85,
         };
         const { history } = this.props;
 
@@ -59,9 +59,9 @@ class WaitingRoom extends React.Component {
     componentDidMount() {
         this.interval = setInterval(() => {
             this.setState((prevState) => {
-                if (prevState.gifX === -15) {
+                if (prevState.gifX === 0) {
                     return {
-                        gifX: -110,
+                        gifX: -85,
                     };
                 } else {
                     return {
@@ -138,7 +138,6 @@ class WaitingRoom extends React.Component {
                     gifX={gifX}
                     key={this.gifX}
                     chatbox={false}
-                    size={4}
                 />
                 );
                 <LoadingContainer>

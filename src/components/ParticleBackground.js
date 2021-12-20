@@ -1,47 +1,22 @@
 import React from "react";
 import { Particles } from "react-tsparticles";
+import { GifContainer } from "./styled/ParticleBackground.styled";
 
-const ParticleBackground = ({ gifX, chatbox, size }) => {
-    const catGifURL =
-        "https://media.giphy.com/media/P9tXiU2qcW8PcEFDfq/giphy.gif";
-    const rainbowGifURL =
-        "https://media.giphy.com/media/U3K7MEs1Mw6ulqi3M7/giphy.gif";
-
-    const gifs = [];
-    for (let i = 0; i < size; i++) {
-        gifs.push(
-            <img
-                src={rainbowGifURL}
-                alt="cat gif"
-                style={{ padding: "0", margin: "0" }}
-            />
-        );
-    }
-
-    gifs.push(
-        <img
-            src={catGifURL}
-            alt="cat gif"
-            style={{ padding: "0", margin: "0" }}
-        />
-    );
+const ParticleBackground = ({ chatbox, gifX }) => {
 
     return (
         <>
             {!chatbox && (
-                <div
+                <GifContainer
                     style={{
-                        position: "absolute",
-                        top: "40%",
                         left: `${gifX}%`,
-                        width: "40%",
-                        zIndex: "10",
-                        display: "flex",
-                        flexDirection: "row",
                     }}
                 >
-                    {gifs}
-                </div>
+                    <img
+                        src="https://vincentgarreau.com/particles.js/assets/img/kbLd9vb_new.gif"
+                        alt="cat gif"
+                    />
+                </GifContainer>
             )}
 
             <Particles
