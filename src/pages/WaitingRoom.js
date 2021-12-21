@@ -75,17 +75,17 @@ class WaitingRoom extends React.Component {
     componentDidMount() {
         this.interval = setInterval(() => {
             this.setState(prevState => {
-                if (prevState.gifX === 0) {
+                if (prevState.gifX >= 100) {
                     return {
-                        gifX: -85,
+                        gifX: -120,
                     };
                 } else {
                     return {
-                        gifX: prevState.gifX + 5,
+                        gifX: prevState.gifX + 0.05,
                     };
                 }
             });
-        }, 1000);
+        }, 1);
     }
 
     componentWillUnmount() {
