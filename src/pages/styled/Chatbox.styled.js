@@ -3,62 +3,38 @@ import styled from "styled-components";
 export const Container = styled.div`
     font-family: "Aeonik";
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
     position: relative;
     width: 100%;
     height: 100%;
-    min-width: 100vw;
-    min-height: 100vh;
 
 
     background-color: ${({ theme }) => theme.mainColors.lightBlue};
 
     overflow-y: scroll;
 
-    @media screen and (max-width: 768px) {
-        padding: 0 30px 0 30px 0 !important;
-    }
+
 `;
 
 export const Box = styled.div`
-    height: 85%;
-    width: 40%;
-    max-hegiht: 85%;
-
-    @media screen and (min-width: 1175px) and (max-width: 1500px) {
-        width: 50%;
-        height: 70%;
-    }
-
-    @media screen and (min-width: 768px) and (max-width: 1174px) {
-        width: 70%;
-        height: 80%;
-    }
-
-    @media screen and (max-width: 767px) {
-        height: 100%;
-        width: 100%;
-    }
+    position: relative;
+    height: 100%;
+    width: 100%;
+    max-height: 100%;
+    max-width: 100vw;
     display: flex;
     flex-direction: column;
-
 
     box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
     border-radius: 10px;
     position: relative;
     z-index: 1;
+    flex-grow: 1
     background: inherit;
     overflow: hidden;
-
-   
 `;
 
 export const Content = styled.div`
-    height: 100%
-
+    height: 100%;
     width: 100%;
     max-width: 100%;
     position: relative;

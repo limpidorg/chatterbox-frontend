@@ -236,7 +236,6 @@ class Chatbox extends React.Component {
 
         return (
             <>
-                <DrawingArea />
                 {loading && (
                     <>
                         <ParticleBackground chatbox />
@@ -246,92 +245,101 @@ class Chatbox extends React.Component {
                     </>
                 )}
                 {!loading && (
-                    <Container>
-                        <Box>
-                            <Content>
-                                <Cross
-                                    handleLeave={() => {
-                                        this.handleLeave();
-                                    }}
-                                />
-                                <h2>
-                                    {username && (
-                                        <>
-                                            {days[date.getUTCDay()]},{" "}
-                                            <span>
-                                                {date.getUTCDate()}{" "}
-                                                {months[date.getUTCMonth()]}
-                                            </span>{" "}
-                                            {date.getFullYear()}
-                                        </>
-                                    )}
-                                    {!username && (
-                                        <>
-                                            {"Chatting to: "}{" "}
-                                            <span>{username}</span>
-                                        </>
-                                    )}
-                                </h2>
-                                <div style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    width: "100%",
-                                    height: "100%",
-                                }}>
-                                    {conversation.map((el) => {
-                                        return (
-                                            <Message
-                                                key={el.messageId}
-                                                avatar={
-                                                    el.sessionId !==
+                    <div>
+                        <Container>
+                            <DrawingArea style={{
+                                top: 0,
+                                left: 0,
+                                position: 'fixed'
+                            }} />
+                            <Box>
+                                <Content>
+                                    <Cross
+                                        handleLeave={() => {
+                                            this.handleLeave();
+                                        }}
+                                    />
+                                    <h2>
+                                        {username && (
+                                            <>
+                                                {days[date.getUTCDay()]},{" "}
+                                                <span>
+                                                    {date.getUTCDate()}{" "}
+                                                    {months[date.getUTCMonth()]}
+                                                </span>{" "}
+                                                {date.getFullYear()}
+                                            </>
+                                        )}
+                                        {!username && (
+                                            <>
+                                                {"Chatting to: "}{" "}
+                                                <span>{username}</span>
+                                            </>
+                                        )}
+                                    </h2>
+                                    <div style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        width: "100%",
+                                        height: "100%",
+                                    }}>
+                                        {conversation.map((el) => {
+                                            return (
+                                                <Message
+                                                    key={el.messageId}
+                                                    avatar={
+                                                        el.sessionId !==
+                                                            Connection.sessionId
+                                                            ? this.avatar1
+                                                            : this.avatar2
+                                                    }
+                                                    self={
+                                                        el.sessionId !==
                                                         Connection.sessionId
-                                                        ? this.avatar1
-                                                        : this.avatar2
-                                                }
-                                                self={
-                                                    el.sessionId !==
-                                                    Connection.sessionId
-                                                }
+                                                    }
                                                 // showAvatar
-                                            >
-                                                {el.message}
-                                            </Message>
-                                        );
-                                    })}
+                                                >
+                                                    {el.message}
+                                                </Message>
+                                            );
+                                        })}
 
-                                </div>
-                                <div
-                                    style={{  clear: "both" }}
-                                    ref={(el) => {
-                                        this.messagesEnd = el;
-                                    }}
-                                />
-                            </Content>
-                            <ActionBar>
-                                <input
-                                    type="text"
-                                    placeholder="Compose your message..."
-                                    onChange={(ev) => {
-                                        this.handleChange(ev);
-                                    }}
-                                    value={message}
-                                    onKeyDown={(ev) => {
-                                        if (ev.key === "Enter") {
+                                    </div>
+                                    <div
+                                        style={{ clear: "both" }}
+                                        ref={(el) => {
+                                            this.messagesEnd = el;
+                                        }}
+                                    />
+                                </Content>
+                                <ActionBar>
+                                    <input
+                                        type="text"
+                                        placeholder="Compose your message..."
+                                        onChange={(ev) => {
+                                            this.handleChange(ev);
+                                        }}
+                                        value={message}
+                                        onKeyDown={(ev) => {
+                                            if (ev.key === "Enter") {
+                                                this.handleSend();
+                                            }
+                                        }}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => {
                                             this.handleSend();
-                                        }
-                                    }}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        this.handleSend();
-                                    }}
-                                >
-                                    Send
-                                </button>
-                            </ActionBar>
-                        </Box>
-                    </Container>
+                                        }}
+                                    >
+                                        Send
+                                    </button>
+                                </ActionBar>
+                            </Box>
+
+                        </Container>
+                    </div>
+
                 )}
             </>
         );

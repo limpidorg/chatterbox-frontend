@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Container = styled.div`
     font-family: "Aeonik";
     padding: 0 50px 0 50px;
-    height: 100vh;
+    height: 100%;
 
     display: flex;
     align-items: center;

@@ -2,17 +2,17 @@ import styled from "styled-components";
 
 export const Container = styled.div`
     font-family: "Aeonik";
-    padding: 0 100px 0 100px;
-    height: 100vh;
+    height: fit-content;
+    min-height: 100vh;
+    min-width: 100vw;
+    max-width: 100vw;
+    padding-left: 2em;
+    padding-right: 2em;
+    
 
     display: flex;
     align-items: center;
     justify-content: center;
-
-    @media screen and (max-width: 850px) and (orientation: landscape) {
-        display: block;
-        padding-top: 15px;
-    }
 
     background-color: ${({ theme }) => theme.mainColors.lightBlue};
 
@@ -29,19 +29,19 @@ export const Container = styled.div`
             color: ${({ theme }) => theme.mainColors.darkBlue};
         }
 
-        @media screen and (min-width: 768px) and (max-width: 1174px) {
-            font-size: 3.5rem;
-        }
+        // @media screen and (min-width: 768px) and (max-width: 1174px) {
+        //     font-size: 3.5rem;
+        // }
 
-        @media screen and (max-width: 767px) {
-            line-height: 60px;
-            font-size: 2.25rem;
-        }
+        // @media screen and (max-width: 767px) {
+        //     line-height: 60px;
+        //     font-size: 2.25rem;
+        // }
 
-        @media screen and (max-width: 900px) and (orientation: landscape) {
-            line-height: 50px;
-            font-size: 2.25rem;
-        }
+        // @media screen and (max-width: 900px) and (orientation: landscape) {
+        //     line-height: 50px;
+        //     font-size: 2.25rem;
+        // }
     }
 
     p {
@@ -56,13 +56,13 @@ export const Container = styled.div`
             font-style: italic;
         }
 
-        @media screen and (min-width: 768px) and (max-width: 1174px) {
-            font-size: 1rem;
-        }
+        // @media screen and (min-width: 768px) and (max-width: 1174px) {
+        //     font-size: 1rem;
+        // }
 
-        @media screen and (max-width: 850px) and (orientation: landscape) {
-            margin: 25px 0 25px 0;
-        }
+        // @media screen and (max-width: 850px) and (orientation: landscape) {
+        //     margin: 25px 0 25px 0;
+        // }
     }
 
     .navigation {
@@ -73,16 +73,16 @@ export const Container = styled.div`
     }
 `;
 
-export const Centered = styled.div`
-    width: 100%;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+// export const Centered = styled.div`
+//     width: 100%;
+//     display: flex;
+//     justify-content: space-evenly;
+//     align-items: center;
 
-    @media screen and (max-width: 1174px) {
-        flex-direction: column;
-    }
-`;
+//     @media screen and (max-width: 1174px) {
+//         flex-direction: column;
+//     }
+// `;
 
 export const FormContainer = styled.div`
     display: flex;
@@ -107,9 +107,9 @@ export const FormContainer = styled.div`
         border: none;
         width: 12%;
 
-        @media screen and (max-width: 767px) {
-            width: 20%;
-        }
+        // @media screen and (max-width: 767px) {
+        //     width: 20%;
+        // }
 
         background-color: ${({ theme }) => theme.mainColors.blue};
 
@@ -128,9 +128,9 @@ export const FormContainer = styled.div`
 export const FormGroup = styled.div`
     display: flex;
     width: 425px;
-    @media screen and (max-width: 767px) {
-        width: 275px;
-    }
+    // @media screen and (max-width: 767px) {
+    //     width: 275px;
+    // }
 
     & > span,
     .form-field {
@@ -211,13 +211,13 @@ export const FormField = styled.input`
 `;
 
 export const Illustration = styled.img`
-    height: 625px;
+    height: 500px;
 
-    @media screen and (min-width: 768px) and (max-width: 1174px) and (orientation: landscape) {
-        height: 0px;
-    }
+    // @media screen and (min-width: 768px) and (max-width: 1174px) and (orientation: landscape) {
+    //     display: none;
+    // }
 
-    @media screen and (max-width: 767px) {
-        height: 0px;
+    @media screen and (max-width: 1280px) {
+        display: none;
     }
 `;
