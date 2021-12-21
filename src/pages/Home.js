@@ -4,7 +4,7 @@ import { Connection } from "../lib/apiconnect";
 import "../common.css";
 
 import {
-    // Centered,
+    Centered,
     Container,
     FormContainer,
     FormField,
@@ -227,7 +227,7 @@ class Home extends React.Component {
 
         return (
             <Container>
-                {/* <Centered> */}
+                <Centered> 
                 <div>
                     <h1>
                         Chatterbox.
@@ -400,7 +400,7 @@ class Home extends React.Component {
                         src={`${process.env.PUBLIC_URL}/images/home-illustration.svg`}
                     />
                 </div>
-                {/* </Centered> */}
+                </Centered>
             </Container>
         );
     }

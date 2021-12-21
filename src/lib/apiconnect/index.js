@@ -12,7 +12,7 @@ function retrieveSessionId() {
 }
 
 class APIConnection {
-    constructor({ APIEndpoint = "https://chatterboxapis.yyjlincoln.app" } = {}) {
+    constructor({ APIEndpoint = "http://192.168.1.21:3002" } = {}) {
         this.APIEndpoint = APIEndpoint;
         this.socket = io(this.APIEndpoint);
         this.connected = false;

@@ -2,7 +2,12 @@
 import React from "react";
 import { withRouter } from "react-router";
 import multiavatar from "@multiavatar/multiavatar";
-import { ActionBar, Box, Content } from "./styled/Chatbox.styled";
+import {
+    ActionBar,
+    Box,
+    Content,
+    FullScreenContainer,
+} from "./styled/Chatbox.styled";
 import { LoadingContainer } from "./styled/WaitingRoom.styled";
 import Message from "../components/chatbox/Message";
 import Cross from "../components/chatbox/Cross";
@@ -24,8 +29,10 @@ class Chatbox extends React.Component {
             loading: "Connecting",
             id: match.params.id,
             conversation: [],
-            username: "Bonsai",
         };
+
+        this.messagesEnd = React.createRef();
+        this.containerRef = React.createRef();
 
         this.avatar1 = multiavatar(getRandomInt(1000));
         this.avatar2 = multiavatar(getRandomInt(1000));
@@ -34,24 +41,24 @@ class Chatbox extends React.Component {
 
         Connection.resumeSession()
             .then(() => {
-                Connection.getUsername().then(res => {
+                Connection.getUsername().then((res) => {
                     this.setState({
                         username: res,
                     });
                 });
                 Connection.joinChat(id)
-                    .then(res => {
+                    .then((res) => {
                         this.setState(
                             {
                                 loading: null,
                                 conversation: res.conversations,
                             },
                             () => {
-                                this.scrollToBottom(false);
+                                this.scrollToBottom(false, this.messagesEnd);
                             }
                         );
                     })
-                    .catch(e => {
+                    .catch((e) => {
                         window.$alert.present(
                             "Could not join the chat",
                             e.message,
@@ -70,7 +77,7 @@ class Chatbox extends React.Component {
                         );
                     });
                 // Register for chat destoryed event
-                Connection.on("chat-destroyed", data => {
+                Connection.on("chat-destroyed", (data) => {
                     if (data.chatId === id) {
                         window.$alert.present(
                             "The chat has been closed.",
@@ -87,14 +94,14 @@ class Chatbox extends React.Component {
                         );
                     }
                 });
-                Connection.on("new-message", data => {
+                Connection.on("new-message", (data) => {
                     if (data.chatId === id) {
                         const messageIndex = this.getMessageIndex(
                             data.messageId
                         );
                         if (messageIndex === null) {
                             this.pushMessage(data.message).then(() => {
-                                this.scrollToBottom();
+                                this.scrollToBottom(true, this.messagesEnd);
                             });
                         }
                     }
@@ -124,7 +131,7 @@ class Chatbox extends React.Component {
         }
         Connection.sendMessage(id, message)
             .then(() => {})
-            .catch(e => {
+            .catch((e) => {
                 window.$alert.present("Could not send message", e.message, [
                     {
                         title: "OK",
@@ -158,7 +165,7 @@ class Chatbox extends React.Component {
                                 });
                                 Connection.navigate("/");
                             })
-                            .catch(e => {
+                            .catch((e) => {
                                 window.$alert.present(
                                     "Could not leave the chat",
                                     e.message,
@@ -179,6 +186,14 @@ class Chatbox extends React.Component {
         );
     }
 
+    onFocus() {
+        this.scrollToBottom(true, this.containerRef);
+    }
+
+    onBlur() {
+        this.scrollToBottom(true, this.containerRef);
+    }
+
     getMessageIndex(messageId) {
         const { conversation } = this.state;
         for (let i = 0; i < conversation.length; i++) {
@@ -189,16 +204,15 @@ class Chatbox extends React.Component {
         return null;
     }
 
-    scrollToBottom(isSmooth = true) {
-        if (this.messagesEnd) {
-            this.messagesEnd.scrollIntoView(
-                isSmooth ? { behavior: "smooth" } : {}
-            );
+    // eslint-disable-next-line class-methods-use-this
+    scrollToBottom(isSmooth = true, ref) {
+        if (ref) {
+            ref.scrollIntoView(isSmooth ? { behavior: "smooth" } : {});
         }
     }
 
     async pushMessage(newMessage) {
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             const { conversation } = this.state;
             this.setState(
                 {
@@ -218,27 +232,15 @@ class Chatbox extends React.Component {
             <>
                 {loading && (
                     <>
-                        <ParticleBackground chatbox />
+                        <ParticleBackground />
                         <LoadingContainer>
-                            <h1>{loading}</h1>
+                            <h1 className="title">{loading}</h1>
                         </LoadingContainer>
                     </>
                 )}
                 {!loading && (
                     // Parent container - should be full screen
-                    <div
-                        style={{
-                            width: "100%",
-                            height: "100%",
-                            minHeight: "100vh",
-                            minWidth: "100vw",
-                            overflow: "hidden",
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            position: "relative",
-                        }}
-                    >
+                    <FullScreenContainer>
                         <div
                             style={{
                                 width: "100%",
@@ -267,7 +269,7 @@ class Chatbox extends React.Component {
                                                 justifyContent: "center",
                                             }}
                                         >
-                                            <h2>
+                                            <h2 ref={this.containerRef}>
                                                 Chatting to:{" "}
                                                 <span>{username}</span>
                                             </h2>
@@ -290,7 +292,7 @@ class Chatbox extends React.Component {
                                                 paddingBottom: "1em",
                                             }}
                                         >
-                                            {conversation.map(el => {
+                                            {conversation.map((el) => {
                                                 return (
                                                     <Message
                                                         key={el.messageId}
@@ -311,7 +313,7 @@ class Chatbox extends React.Component {
                                                 );
                                             })}
                                             <div
-                                                ref={el => {
+                                                ref={(el) => {
                                                     this.messagesEnd = el;
                                                 }}
                                             />
@@ -321,11 +323,13 @@ class Chatbox extends React.Component {
                                         <input
                                             type="text"
                                             placeholder="Compose your message..."
-                                            onChange={ev => {
+                                            onFocus={this.onFocus}
+                                            onBlur={this.onBlur}
+                                            onChange={(ev) => {
                                                 this.handleChange(ev);
                                             }}
                                             value={message}
-                                            onKeyDown={ev => {
+                                            onKeyDown={(ev) => {
                                                 if (ev.key === "Enter") {
                                                     this.handleSend();
                                                 }
@@ -350,7 +354,7 @@ class Chatbox extends React.Component {
                                 position: "fixed",
                             }}
                         />
-                    </div>
+                    </FullScreenContainer>
                 )}
             </>
         );

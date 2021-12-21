@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
 export const Container = styled.button`
-    // position: absolute;
-    // top: 40px;
-    // right: 40px;
+    position: absolute;
+    top: 25px;
+    right: 40px;
 
     border: none;
     background: none;
@@ -13,10 +13,6 @@ export const Container = styled.button`
         outline: none;
     }
 
-    z-index: 10;
+    z-index: 10
 
-    @media screen and (max-width: 768px) {
-        top: 40px;
-        right: 20px;
-    }
 `;

@@ -1,6 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router";
 import ParticleBackground from "../components/ParticleBackground";
+import NyanCat from "../components/waiting-room/NyanCat";
 import { Connection } from "../lib/apiconnect";
 import { LoadingContainer } from "./styled/WaitingRoom.styled";
 
@@ -18,7 +19,7 @@ class WaitingRoom extends React.Component {
         // Check for the validity of current session
 
         Connection.resumeSession()
-            .then(sessionInfo => {
+            .then((sessionInfo) => {
                 if (sessionInfo.chatId) {
                     this.joinChat(sessionInfo.chatId);
                 } else {
@@ -39,10 +40,10 @@ class WaitingRoom extends React.Component {
                         );
                     });
                     this.matchChat()
-                        .then(chatId => {
+                        .then((chatId) => {
                             this.joinChat(chatId);
                         })
-                        .catch(e => {
+                        .catch((e) => {
                             Connection.destroySession(
                                 Connection.sessionId
                             ).then(() => {
@@ -74,8 +75,8 @@ class WaitingRoom extends React.Component {
 
     componentDidMount() {
         this.interval = setInterval(() => {
-            this.setState(prevState => {
-                if (prevState.gifX >= 100) {
+            this.setState((prevState) => {
+                if (prevState.gifX >= -5) {
                     return {
                         gifX: -120,
                     };
@@ -131,7 +132,7 @@ class WaitingRoom extends React.Component {
                 loading:
                     "Asking for permission to enter chatterbox universe...",
             });
-            Connection.on("new-chat-found", res => {
+            Connection.on("new-chat-found", (res) => {
                 resolve(res.chatId);
             });
             Connection.emit("new-chat-request")
@@ -141,7 +142,7 @@ class WaitingRoom extends React.Component {
                             "The universe is huge but we're trying our best to find your CHATLING...",
                     });
                 })
-                .catch(e => {
+                .catch((e) => {
                     reject(e);
                 });
         });
@@ -151,35 +152,21 @@ class WaitingRoom extends React.Component {
         const { loading, gifX } = this.state;
         return (
             <>
-                <ParticleBackground
-                    gifX={gifX}
-                    key={this.gifX}
-                    chatbox={false}
-                />
-                );
+                <ParticleBackground />
+
                 <LoadingContainer>
-                    <h1>{loading}</h1>
-                    <div
-                        style={{
-                            position: "absolute",
-                            zIndex: "15",
-                            width: "100%",
-                            display: "flex",
-                            bottom: "5em",
-                            flexDirection: "column",
-                        }}
-                    >
-                        <div className="cancelContainer">
-                            <h1
-                                className="cancel"
-                                role="none"
-                                onClick={() => {
-                                    Connection.emit("cancel-chat-request");
-                                }}
-                            >
-                                Cancel
-                            </h1>
-                        </div>
+                    <h1 className="title">{loading}</h1>
+                    <NyanCat gifX={gifX} key={this.gifX} />
+                    <div className="cancelContainer">
+                        <h1
+                            className="cancel"
+                            role="none"
+                            onClick={() => {
+                                Connection.emit("cancel-chat-request");
+                            }}
+                        >
+                            Cancel
+                        </h1>
                     </div>
                 </LoadingContainer>
             </>

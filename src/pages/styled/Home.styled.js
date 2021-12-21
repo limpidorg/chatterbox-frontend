@@ -6,9 +6,6 @@ export const Container = styled.div`
     min-height: 100vh;
     min-width: 100vw;
     max-width: 100vw;
-    padding-left: 2em;
-    padding-right: 2em;
-    
 
     display: flex;
     align-items: center;
@@ -26,17 +23,16 @@ export const Container = styled.div`
 
         span {
             color: ${({ theme }) => theme.mainColors.darkBlue};
-            font-size: 3rem;
         }
 
         // @media screen and (min-width: 768px) and (max-width: 1174px) {
         //     font-size: 3.5rem;
         // }
 
-        // @media screen and (max-width: 767px) {
-        //     line-height: 60px;
-        //     font-size: 2.25rem;
-        // }
+        @media screen and (max-width: 768px) {
+            line-height: 40px;
+            font-size: 2.25rem;
+        }
 
         // @media screen and (max-width: 900px) and (orientation: landscape) {
         //     line-height: 50px;
@@ -73,16 +69,22 @@ export const Container = styled.div`
     }
 `;
 
-// export const Centered = styled.div`
-//     width: 100%;
-//     display: flex;
-//     justify-content: space-evenly;
-//     align-items: center;
+export const Centered = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 
-//     @media screen and (max-width: 1174px) {
-//         flex-direction: column;
-//     }
-// `;
+    padding: 0 50px 0 50px;
+
+    @media screen and (max-width: 900px) and (orientation: landscape) {
+        padding: 20px 50px 20px 50px;
+    }
+
+    @media screen and (max-width: 1174px) {
+        flex-direction: column;
+    }
+`;
 
 export const FormContainer = styled.div`
     display: flex;
@@ -107,9 +109,9 @@ export const FormContainer = styled.div`
         border: none;
         width: 12%;
 
-        // @media screen and (max-width: 767px) {
-        //     width: 20%;
-        // }
+        /* @media screen and (max-width: 767px) {
+            width: 20%;
+        } */
 
         background-color: ${({ theme }) => theme.mainColors.blue};
 
@@ -128,9 +130,9 @@ export const FormContainer = styled.div`
 export const FormGroup = styled.div`
     display: flex;
     width: 425px;
-    // @media screen and (max-width: 767px) {
-    //     width: 275px;
-    // }
+    @media screen and (max-width: 768px) {
+        width: 275px;
+    }
 
     & > span,
     .form-field {
@@ -187,7 +189,7 @@ export const FormField = styled.input`
     line-height: 25px;
     font-size: 1.25rem;
 
-    @media screen and (max-width: 767px) {
+    @media screen and (max-width: 768px) {
         font-size: 1rem;
     }
 
@@ -212,8 +214,13 @@ export const FormField = styled.input`
 
 export const Illustration = styled.img`
     height: 500px;
+    display: none;
 
-    @media screen and (max-width: 1280px) {
-        display: none;
+    @media screen and (min-width: 800px) and (orientation: portrait) {
+        display: block;
+    }
+
+    @media screen and (min-width: 1175px) and (orientation: landscape) {
+        display: block;
     }
 `;
