@@ -32,6 +32,11 @@ class Chatbox extends React.Component {
 
         Connection.resumeSession()
             .then(() => {
+                Connection.getUsername().then((res) => {
+                    this.setState({
+                        username: res,
+                    });
+                });
                 Connection.joinChat(id)
                     .then((res) => {
                         this.setState(
@@ -116,7 +121,7 @@ class Chatbox extends React.Component {
             return;
         }
         Connection.sendMessage(id, message)
-            .then(() => { })
+            .then(() => {})
             .catch((e) => {
                 window.$alert.present("Could not send message", e.message, [
                     {
@@ -207,33 +212,6 @@ class Chatbox extends React.Component {
     render() {
         const { message, loading, conversation, username } = this.state;
 
-        const date = new Date();
-
-        const days = [
-            "Sunday",
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-        ];
-
-        const months = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-        ];
-
         return (
             <>
                 <DrawingArea />
@@ -255,36 +233,23 @@ class Chatbox extends React.Component {
                                     }}
                                 />
                                 <h2>
-                                    {username && (
-                                        <>
-                                            {days[date.getUTCDay()]},{" "}
-                                            <span>
-                                                {date.getUTCDate()}{" "}
-                                                {months[date.getUTCMonth()]}
-                                            </span>{" "}
-                                            {date.getFullYear()}
-                                        </>
-                                    )}
-                                    {!username && (
-                                        <>
-                                            {"Chatting to: "}{" "}
-                                            <span>{username}</span>
-                                        </>
-                                    )}
+                                    Chatting to: <span>{username}</span>
                                 </h2>
-                                <div style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    width: "100%",
-                                    height: "100%",
-                                }}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        width: "100%",
+                                        height: "100%",
+                                    }}
+                                >
                                     {conversation.map((el) => {
                                         return (
                                             <Message
                                                 key={el.messageId}
                                                 avatar={
                                                     el.sessionId !==
-                                                        Connection.sessionId
+                                                    Connection.sessionId
                                                         ? this.avatar1
                                                         : this.avatar2
                                                 }
@@ -298,10 +263,9 @@ class Chatbox extends React.Component {
                                             </Message>
                                         );
                                     })}
-
                                 </div>
                                 <div
-                                    style={{  clear: "both" }}
+                                    style={{ clear: "both" }}
                                     ref={(el) => {
                                         this.messagesEnd = el;
                                     }}

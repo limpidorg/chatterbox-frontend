@@ -26,7 +26,21 @@ class Home extends React.Component {
         };
         Connection.updateHistory(props.history);
         Connection.resumeSession()
-            .then(res => {
+            .then((res) => {
+                this.setState({
+                    isLoggedIn: true,
+                    loading: null,
+                    activeChat: res.chatId,
+                });
+            })
+            .catch(() => {
+                this.setState({
+                    isLoggedIn: false,
+                    loading: null,
+                });
+            });
+        Connection.resumeSession()
+            .then((res) => {
                 this.setState({
                     isLoggedIn: true,
                     loading: null,
@@ -101,7 +115,7 @@ class Home extends React.Component {
                 });
 
                 Connection.newSession(discord, username)
-                    .then(sessionInfo => {
+                    .then((sessionInfo) => {
                         this.setState({
                             loading: `Connecting to session ${sessionInfo.sessionId}`,
                         });
@@ -182,11 +196,11 @@ class Home extends React.Component {
 
     continueWithoutDiscord() {
         const { history } = this.props;
-        const { name } = this.state;
+        const { username } = this.state;
         this.setState({
             loading: "Starting a new session...",
         });
-        Connection.newSession(null, name).then(sessionInfo => {
+        Connection.newSession(null, username).then((sessionInfo) => {
             this.setState(
                 {
                     loading: `Connecting to session ${sessionInfo.sessionId}`,
@@ -218,7 +232,7 @@ class Home extends React.Component {
                         <h1>
                             Chatterbox,
                             <br />
-                            Chat <span>anonymously</span>
+                            <span>chat anonymously</span>
                         </h1>
 
                         <p>
@@ -288,7 +302,7 @@ class Home extends React.Component {
                                                         maxLength={40}
                                                         placeholder="Enter your discord tag"
                                                         value={discord}
-                                                        onChange={event => {
+                                                        onChange={(event) => {
                                                             this.handleDiscordChange(
                                                                 event
                                                             );
@@ -296,11 +310,12 @@ class Home extends React.Component {
                                                         style={
                                                             invalidDiscordTag
                                                                 ? {
-                                                                      border: "2px solid red",
+                                                                      border:
+                                                                          "2px solid red",
                                                                   }
                                                                 : {}
                                                         }
-                                                        onKeyDown={ev => {
+                                                        onKeyDown={(ev) => {
                                                             if (
                                                                 ev.key ===
                                                                 "Enter"
@@ -320,12 +335,12 @@ class Home extends React.Component {
                                                         maxLength={40}
                                                         placeholder="What do you want to be called?"
                                                         value={username}
-                                                        onChange={event => {
+                                                        onChange={(event) => {
                                                             this.handleUsernameChange(
                                                                 event
                                                             );
                                                         }}
-                                                        onKeyDown={ev => {
+                                                        onKeyDown={(ev) => {
                                                             if (
                                                                 ev.key ===
                                                                 "Enter"

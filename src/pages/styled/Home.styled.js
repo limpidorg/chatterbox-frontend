@@ -16,7 +16,6 @@ export const Container = styled.div`
 
     background-color: ${({ theme }) => theme.mainColors.lightBlue};
 
-
     h1 {
         margin: 0px;
 
@@ -27,6 +26,7 @@ export const Container = styled.div`
 
         span {
             color: ${({ theme }) => theme.mainColors.darkBlue};
+            font-size: 3rem;
         }
 
         @media screen and (min-width: 768px) and (max-width: 1174px) {
