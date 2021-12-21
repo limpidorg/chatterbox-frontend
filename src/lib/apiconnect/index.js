@@ -12,7 +12,7 @@ function retrieveSessionId() {
 }
 
 class APIConnection {
-    constructor({ APIEndpoint = "http://localhost:3001" } = {}) {
+    constructor({ APIEndpoint = "http://localhost:3002" } = {}) {
         this.APIEndpoint = APIEndpoint;
         this.socket = io(this.APIEndpoint);
         this.connected = false;
@@ -123,6 +123,13 @@ class APIConnection {
         this.sessionId = sessionResponse.sessionId;
         storeSessionId(sessionResponse.sessionId);
         return sessionResponse.sessionInfo;
+    }
+
+    async getUsername() {
+        const sessionResponse = await this.emit("get-username", {
+            selfSessionId: retrieveSessionId(),
+        });
+        return sessionResponse.username;
     }
 
     async newSession(discordId, name) {

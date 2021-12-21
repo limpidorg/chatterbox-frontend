@@ -34,6 +34,11 @@ class Chatbox extends React.Component {
 
         Connection.resumeSession()
             .then(() => {
+                Connection.getUsername().then((res) => {
+                    this.setState({
+                        username: res,
+                    });
+                });
                 Connection.joinChat(id)
                     .then((res) => {
                         this.setState(
@@ -209,33 +214,6 @@ class Chatbox extends React.Component {
     render() {
         const { message, loading, conversation, username } = this.state;
 
-        const date = new Date();
-
-        const days = [
-            "Sunday",
-            "Monday",
-            "Tuesday",
-            "Wednesday",
-            "Thursday",
-            "Friday",
-            "Saturday",
-        ];
-
-        const months = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-        ];
-
         return (
             <>
                 {loading && (
@@ -281,22 +259,7 @@ class Chatbox extends React.Component {
                                             justifyContent: "center",
                                         }}>
                                             <h2>
-                                                {username && (
-                                                    <>
-                                                        {days[date.getUTCDay()]},{" "}
-                                                        <span>
-                                                            {date.getUTCDate()}{" "}
-                                                            {months[date.getUTCMonth()]}
-                                                        </span>{" "}
-                                                        {date.getFullYear()}
-                                                    </>
-                                                )}
-                                                {!username && (
-                                                    <>
-                                                        {"Chatting to: "}{" "}
-                                                        <span>{username}</span>
-                                                    </>
-                                                )}
+                                                Chatting to: <span>{username}</span>
                                             </h2>
 
                                             <Cross
