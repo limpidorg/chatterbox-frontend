@@ -10,7 +10,7 @@ export const LoadingContainer = styled.div`
     h1 {
         position: relative;
         z-index: 10;
-        margin: 0;
+        margin: 0 0 0 15px;
         font-family: inherit;
         font-weight: normal;
         font-size: 2.25rem;
