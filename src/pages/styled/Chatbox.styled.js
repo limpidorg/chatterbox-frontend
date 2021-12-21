@@ -7,8 +7,12 @@ export const Container = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-width: 100vw;
+    min-height: 100vh;
 
-    height: 100vh;
 
     background-color: ${({ theme }) => theme.mainColors.lightBlue};
 
@@ -22,6 +26,7 @@ export const Container = styled.div`
 export const Box = styled.div`
     height: 85%;
     width: 40%;
+    max-hegiht: 85%;
 
     @media screen and (min-width: 1175px) and (max-width: 1500px) {
         width: 50%;
@@ -37,8 +42,9 @@ export const Box = styled.div`
         height: 100%;
         width: 100%;
     }
+    display: flex;
+    flex-direction: column;
 
-    display: table;
 
     box-shadow: 0 0 1rem 0 rgba(0, 0, 0, 0.2);
     border-radius: 10px;
@@ -47,39 +53,15 @@ export const Box = styled.div`
     background: inherit;
     overflow: hidden;
 
-    :before {
-        content: "";
-        position: absolute;
-        background: inherit;
-        z-index: -1;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        box-shadow: inset 0 0 1000px rgba(255, 255, 255, 0.25);
-        filter: blur(10px);
-        margin: -20px;
-    }
+   
 `;
 
 export const Content = styled.div`
-    height: calc(100vh - 50px - 125px);
-
-    @media screen and (max-width: 768px) {
-        height: calc(100vh - 20px - 100px);
-    }
-
-    @media screen and (min-width: 768px) and (max-width: 1174px) {
-        height: calc(100vh - 50px - 225px);
-    }
-
-    @media screen and (min-width: 1175px) and (max-width: 1500px) {
-        height: calc(100vh - 50px - 250px);
-    }
+    height: 100%
 
     width: 100%;
-
-    display: block;
+    max-width: 100%;
+    position: relative;
     overflow-y: scroll;
     overflow-x: hidden;
 

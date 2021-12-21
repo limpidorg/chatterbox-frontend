@@ -10,6 +10,9 @@ body {
     overflow: hidden;
 
     user-select: none;
+    min-width: 100%;
+    min-height: 100%;
+    position: relative;
 }
 
 code {
@@ -20,4 +23,9 @@ code {
 html {
     margin: 0;
     padding: 0;
+}
+
+#root{
+    min-width: 100vw;
+    min-height: 100vh;
 }

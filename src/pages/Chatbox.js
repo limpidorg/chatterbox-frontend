@@ -116,7 +116,7 @@ class Chatbox extends React.Component {
             return;
         }
         Connection.sendMessage(id, message)
-            .then(() => {})
+            .then(() => { })
             .catch((e) => {
                 window.$alert.present("Could not send message", e.message, [
                     {
@@ -272,27 +272,36 @@ class Chatbox extends React.Component {
                                         </>
                                     )}
                                 </h2>
-                                {conversation.map((el) => {
-                                    return (
-                                        <Message
-                                            key={el.messageId}
-                                            avatar={
-                                                el.sessionId !==
-                                                Connection.sessionId
-                                                    ? this.avatar1
-                                                    : this.avatar2
-                                            }
-                                            self={
-                                                el.sessionId !==
-                                                Connection.sessionId
-                                            }
-                                        >
-                                            {el.message}
-                                        </Message>
-                                    );
-                                })}
+                                <div style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    width: "100%",
+                                    height: "100%",
+                                }}>
+                                    {conversation.map((el) => {
+                                        return (
+                                            <Message
+                                                key={el.messageId}
+                                                avatar={
+                                                    el.sessionId !==
+                                                        Connection.sessionId
+                                                        ? this.avatar1
+                                                        : this.avatar2
+                                                }
+                                                self={
+                                                    el.sessionId !==
+                                                    Connection.sessionId
+                                                }
+                                                // showAvatar
+                                            >
+                                                {el.message}
+                                            </Message>
+                                        );
+                                    })}
+
+                                </div>
                                 <div
-                                    style={{ float: "left", clear: "both" }}
+                                    style={{  clear: "both" }}
                                     ref={(el) => {
                                         this.messagesEnd = el;
                                     }}
@@ -306,7 +315,6 @@ class Chatbox extends React.Component {
                                         this.handleChange(ev);
                                     }}
                                     value={message}
-                                    maxLength={70}
                                     onKeyDown={(ev) => {
                                         if (ev.key === "Enter") {
                                             this.handleSend();
