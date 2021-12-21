@@ -179,7 +179,7 @@ class APIConnection {
         });
     }
 
-    off(eventname, listener){
+    off(eventname, listener) {
         this.socket.off(eventname, listener);
     }
 

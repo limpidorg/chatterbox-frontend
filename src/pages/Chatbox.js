@@ -22,6 +22,7 @@ class Chatbox extends React.Component {
             loading: "Connecting",
             id: match.params.id,
             conversation: [],
+            username: "Bonsai",
         };
 
         this.avatar1 = multiavatar(getRandomInt(1000));
@@ -204,7 +205,7 @@ class Chatbox extends React.Component {
     }
 
     render() {
-        const { message, loading, conversation } = this.state;
+        const { message, loading, conversation, username } = this.state;
 
         const date = new Date();
 
@@ -254,12 +255,22 @@ class Chatbox extends React.Component {
                                     }}
                                 />
                                 <h2>
-                                    {days[date.getUTCDay()]},{" "}
-                                    <span>
-                                        {date.getUTCDate()}{" "}
-                                        {months[date.getUTCMonth()]}
-                                    </span>{" "}
-                                    {date.getFullYear()}
+                                    {username && (
+                                        <>
+                                            {days[date.getUTCDay()]},{" "}
+                                            <span>
+                                                {date.getUTCDate()}{" "}
+                                                {months[date.getUTCMonth()]}
+                                            </span>{" "}
+                                            {date.getFullYear()}
+                                        </>
+                                    )}
+                                    {!username && (
+                                        <>
+                                            {"Chatting to: "}{" "}
+                                            <span>{username}</span>
+                                        </>
+                                    )}
                                 </h2>
                                 {conversation.map((el) => {
                                     return (
