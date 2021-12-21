@@ -9,7 +9,7 @@ import Cross from "../components/chatbox/Cross";
 import DrawingArea from "../components/DrawingArea";
 import { Connection } from "../lib/apiconnect";
 import ParticleBackground from "../components/ParticleBackground";
-import "./styled/chatbox.css"
+import "./styled/chatbox.css";
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
@@ -34,13 +34,13 @@ class Chatbox extends React.Component {
 
         Connection.resumeSession()
             .then(() => {
-                Connection.getUsername().then((res) => {
+                Connection.getUsername().then(res => {
                     this.setState({
                         username: res,
                     });
                 });
                 Connection.joinChat(id)
-                    .then((res) => {
+                    .then(res => {
                         this.setState(
                             {
                                 loading: null,
@@ -51,7 +51,7 @@ class Chatbox extends React.Component {
                             }
                         );
                     })
-                    .catch((e) => {
+                    .catch(e => {
                         window.$alert.present(
                             "Could not join the chat",
                             e.message,
@@ -70,7 +70,7 @@ class Chatbox extends React.Component {
                         );
                     });
                 // Register for chat destoryed event
-                Connection.on("chat-destroyed", (data) => {
+                Connection.on("chat-destroyed", data => {
                     if (data.chatId === id) {
                         window.$alert.present(
                             "The chat has been closed.",
@@ -87,7 +87,7 @@ class Chatbox extends React.Component {
                         );
                     }
                 });
-                Connection.on("new-message", (data) => {
+                Connection.on("new-message", data => {
                     if (data.chatId === id) {
                         const messageIndex = this.getMessageIndex(
                             data.messageId
@@ -123,8 +123,8 @@ class Chatbox extends React.Component {
             return;
         }
         Connection.sendMessage(id, message)
-            .then(() => { })
-            .catch((e) => {
+            .then(() => {})
+            .catch(e => {
                 window.$alert.present("Could not send message", e.message, [
                     {
                         title: "OK",
@@ -158,7 +158,7 @@ class Chatbox extends React.Component {
                                 });
                                 Connection.navigate("/");
                             })
-                            .catch((e) => {
+                            .catch(e => {
                                 window.$alert.present(
                                     "Could not leave the chat",
                                     e.message,
@@ -198,7 +198,7 @@ class Chatbox extends React.Component {
     }
 
     async pushMessage(newMessage) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             const { conversation } = this.state;
             this.setState(
                 {
@@ -226,40 +226,50 @@ class Chatbox extends React.Component {
                 )}
                 {!loading && (
                     // Parent container - should be full screen
-                    <div style={{
-                        width: "100%",
-                        height: "100%",
-                        minHeight: "100vh",
-                        minWidth: "100vw",
-                        overflow: "hidden",
-                        display: "flex",
-                        flexDirection: "column",
-                        justifyContent: "center",
-                        position: "relative",
-                    }}>
-                        <div style={{
+                    <div
+                        style={{
                             width: "100%",
                             height: "100%",
-                            position: "relative",
+                            minHeight: "100vh",
+                            minWidth: "100vw",
+                            overflow: "hidden",
                             display: "flex",
-                            flexDirection: "row",
+                            flexDirection: "column",
                             justifyContent: "center",
-                            textAlign: "center"
-                        }}>
-                            <div style={{
+                            position: "relative",
+                        }}
+                    >
+                        <div
+                            style={{
+                                width: "100%",
+                                height: "100%",
+                                position: "relative",
                                 display: "flex",
-                                flexDirection: "column",
-                            }} className="chatbox-style">
+                                flexDirection: "row",
+                                justifyContent: "center",
+                                textAlign: "center",
+                            }}
+                        >
+                            <div
+                                style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                }}
+                                className="chatbox-style"
+                            >
                                 <Box>
                                     <Content>
-                                        <div style={{
-                                            display: "flex",
-                                            flexDirection: "row",
-                                            width: "100%",
-                                            justifyContent: "center",
-                                        }}>
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                width: "100%",
+                                                justifyContent: "center",
+                                            }}
+                                        >
                                             <h2>
-                                                Chatting to: <span>{username}</span>
+                                                Chatting to:{" "}
+                                                <span>{username}</span>
                                             </h2>
 
                                             <Cross
@@ -268,23 +278,25 @@ class Chatbox extends React.Component {
                                                 }}
                                             />
                                         </div>
-                                        <div style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            width: "100%",
-                                            height: "100%",
-                                            flexGrow: 1,
-                                            overflowY: "auto",
-                                            paddingTop: "1em",
-                                            paddingBottom: "1em",
-                                        }}>
-                                            {conversation.map((el) => {
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "column",
+                                                width: "100%",
+                                                height: "100%",
+                                                flexGrow: 1,
+                                                overflowY: "auto",
+                                                paddingTop: "1em",
+                                                paddingBottom: "1em",
+                                            }}
+                                        >
+                                            {conversation.map(el => {
                                                 return (
                                                     <Message
                                                         key={el.messageId}
                                                         avatar={
                                                             el.sessionId !==
-                                                                Connection.sessionId
+                                                            Connection.sessionId
                                                                 ? this.avatar1
                                                                 : this.avatar2
                                                         }
@@ -292,30 +304,28 @@ class Chatbox extends React.Component {
                                                             el.sessionId ===
                                                             Connection.sessionId
                                                         }
-                                                    // showAvatar
+                                                        // showAvatar
                                                     >
                                                         {el.message}
                                                     </Message>
                                                 );
                                             })}
                                             <div
-                                                ref={(el) => {
+                                                ref={el => {
                                                     this.messagesEnd = el;
                                                 }}
                                             />
                                         </div>
-
-
                                     </Content>
                                     <ActionBar>
                                         <input
                                             type="text"
                                             placeholder="Compose your message..."
-                                            onChange={(ev) => {
+                                            onChange={ev => {
                                                 this.handleChange(ev);
                                             }}
                                             value={message}
-                                            onKeyDown={(ev) => {
+                                            onKeyDown={ev => {
                                                 if (ev.key === "Enter") {
                                                     this.handleSend();
                                                 }
@@ -333,13 +343,14 @@ class Chatbox extends React.Component {
                                 </Box>
                             </div>
                         </div>
-                        <DrawingArea style={{
-                            top: 0,
-                            left: 0,
-                            position: 'fixed'
-                        }} />
+                        <DrawingArea
+                            style={{
+                                top: 0,
+                                left: 0,
+                                position: "fixed",
+                            }}
+                        />
                     </div>
-
                 )}
             </>
         );

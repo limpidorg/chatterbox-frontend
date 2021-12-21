@@ -3,7 +3,6 @@ import { Particles } from "react-tsparticles";
 import { GifContainer } from "./styled/ParticleBackground.styled";
 
 const ParticleBackground = ({ chatbox, gifX }) => {
-
     return (
         <div>
             {!chatbox && (

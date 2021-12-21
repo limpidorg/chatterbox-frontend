@@ -26,7 +26,7 @@ class Home extends React.Component {
         };
         Connection.updateHistory(props.history);
         Connection.resumeSession()
-            .then((res) => {
+            .then(res => {
                 this.setState({
                     isLoggedIn: true,
                     loading: null,
@@ -40,7 +40,7 @@ class Home extends React.Component {
                 });
             });
         Connection.resumeSession()
-            .then((res) => {
+            .then(res => {
                 this.setState({
                     isLoggedIn: true,
                     loading: null,
@@ -115,7 +115,7 @@ class Home extends React.Component {
                 });
 
                 Connection.newSession(discord, username)
-                    .then((sessionInfo) => {
+                    .then(sessionInfo => {
                         this.setState({
                             loading: `Connecting to session ${sessionInfo.sessionId}`,
                         });
@@ -200,7 +200,7 @@ class Home extends React.Component {
         this.setState({
             loading: "Starting a new session...",
         });
-        Connection.newSession(null, username).then((sessionInfo) => {
+        Connection.newSession(null, username).then(sessionInfo => {
             this.setState(
                 {
                     loading: `Connecting to session ${sessionInfo.sessionId}`,
@@ -236,8 +236,8 @@ class Home extends React.Component {
                     </h1>
 
                     <p>
-                        YES, venting is cool here! Talk about anyone or
-                        anything <span>confidently</span>!<br />
+                        YES, venting is cool here! Talk about anyone or anything{" "}
+                        <span>confidently</span>!<br />
                         Avoid your family or friends with us :)
                     </p>
 
@@ -276,8 +276,7 @@ class Home extends React.Component {
                                                 Connection.destroySession(
                                                     Connection.sessionId
                                                 ).then(() => {
-                                                    window.location.href =
-                                                        "/";
+                                                    window.location.href = "/";
                                                 });
                                             }}
                                         >
@@ -310,14 +309,13 @@ class Home extends React.Component {
                                                     style={
                                                         invalidDiscordTag
                                                             ? {
-                                                                border: "2px solid red",
-                                                            }
+                                                                  border: "2px solid red",
+                                                              }
                                                             : {}
                                                     }
                                                     onKeyDown={ev => {
                                                         if (
-                                                            ev.key ===
-                                                            "Enter"
+                                                            ev.key === "Enter"
                                                         ) {
                                                             this.handleSubmission();
                                                         }
@@ -341,8 +339,7 @@ class Home extends React.Component {
                                                     }}
                                                     onKeyDown={ev => {
                                                         if (
-                                                            ev.key ===
-                                                            "Enter"
+                                                            ev.key === "Enter"
                                                         ) {
                                                             this.handleSubmission();
                                                         }
@@ -374,8 +371,7 @@ class Home extends React.Component {
                                         marginBottom: "10px",
                                     }}
                                 >
-                                    You must join our discord to make it
-                                    work!
+                                    You must join our discord to make it work!
                                 </div>
                             )}
                             <br />
@@ -394,10 +390,12 @@ class Home extends React.Component {
                     )}
                 </div>
 
-                <div style={{
-                    marginLeft: "2em",
-                    marginRight: "1em",
-                }}>
+                <div
+                    style={{
+                        marginLeft: "2em",
+                        marginRight: "1em",
+                    }}
+                >
                     <Illustration
                         src={`${process.env.PUBLIC_URL}/images/home-illustration.svg`}
                     />

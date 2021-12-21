@@ -18,7 +18,7 @@ class WaitingRoom extends React.Component {
         // Check for the validity of current session
 
         Connection.resumeSession()
-            .then((sessionInfo) => {
+            .then(sessionInfo => {
                 if (sessionInfo.chatId) {
                     this.joinChat(sessionInfo.chatId);
                 } else {
@@ -39,10 +39,10 @@ class WaitingRoom extends React.Component {
                         );
                     });
                     this.matchChat()
-                        .then((chatId) => {
+                        .then(chatId => {
                             this.joinChat(chatId);
                         })
-                        .catch((e) => {
+                        .catch(e => {
                             Connection.destroySession(
                                 Connection.sessionId
                             ).then(() => {
@@ -74,7 +74,7 @@ class WaitingRoom extends React.Component {
 
     componentDidMount() {
         this.interval = setInterval(() => {
-            this.setState((prevState) => {
+            this.setState(prevState => {
                 if (prevState.gifX === 0) {
                     return {
                         gifX: -85,
@@ -131,7 +131,7 @@ class WaitingRoom extends React.Component {
                 loading:
                     "Asking for permission to enter chatterbox universe...",
             });
-            Connection.on("new-chat-found", (res) => {
+            Connection.on("new-chat-found", res => {
                 resolve(res.chatId);
             });
             Connection.emit("new-chat-request")
@@ -141,7 +141,7 @@ class WaitingRoom extends React.Component {
                             "The universe is huge but we're trying our best to find your CHATLING...",
                     });
                 })
-                .catch((e) => {
+                .catch(e => {
                     reject(e);
                 });
         });
@@ -169,16 +169,17 @@ class WaitingRoom extends React.Component {
                             flexDirection: "column",
                         }}
                     >
-                        <div className="cancelContainer"><h1
-                            className="cancel"
-                            role="none"
-                            onClick={() => {
-                                Connection.emit("cancel-chat-request");
-                            }}
-                        >
-                            Cancel
-                        </h1></div>
-                        
+                        <div className="cancelContainer">
+                            <h1
+                                className="cancel"
+                                role="none"
+                                onClick={() => {
+                                    Connection.emit("cancel-chat-request");
+                                }}
+                            >
+                                Cancel
+                            </h1>
+                        </div>
                     </div>
                 </LoadingContainer>
             </>
