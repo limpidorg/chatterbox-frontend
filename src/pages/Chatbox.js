@@ -289,7 +289,7 @@ class Chatbox extends React.Component {
                                                                 : this.avatar2
                                                         }
                                                         self={
-                                                            el.sessionId !==
+                                                            el.sessionId ===
                                                             Connection.sessionId
                                                         }
                                                     // showAvatar
