@@ -1,13 +1,15 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 import { withRouter } from "react-router";
 import multiavatar from "@multiavatar/multiavatar";
-import { ActionBar, Box, Content, Container } from "./styled/Chatbox.styled";
+import { ActionBar, Box, Content } from "./styled/Chatbox.styled";
 import { LoadingContainer } from "./styled/WaitingRoom.styled";
 import Message from "../components/chatbox/Message";
 import Cross from "../components/chatbox/Cross";
 import DrawingArea from "../components/DrawingArea";
 import { Connection } from "../lib/apiconnect";
 import ParticleBackground from "../components/ParticleBackground";
+import "./styled/chatbox.css"
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
@@ -245,99 +247,134 @@ class Chatbox extends React.Component {
                     </>
                 )}
                 {!loading && (
-                    <div>
-                        <Container>
-                            <DrawingArea style={{
-                                top: 0,
-                                left: 0,
-                                position: 'fixed'
-                            }} />
-                            <Box>
-                                <Content>
-                                    <Cross
-                                        handleLeave={() => {
-                                            this.handleLeave();
-                                        }}
-                                    />
-                                    <h2>
-                                        {username && (
-                                            <>
-                                                {days[date.getUTCDay()]},{" "}
-                                                <span>
-                                                    {date.getUTCDate()}{" "}
-                                                    {months[date.getUTCMonth()]}
-                                                </span>{" "}
-                                                {date.getFullYear()}
-                                            </>
-                                        )}
-                                        {!username && (
-                                            <>
-                                                {"Chatting to: "}{" "}
-                                                <span>{username}</span>
-                                            </>
-                                        )}
-                                    </h2>
-                                    <div style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        width: "100%",
-                                        height: "100%",
-                                    }}>
-                                        {conversation.map((el) => {
-                                            return (
-                                                <Message
-                                                    key={el.messageId}
-                                                    avatar={
-                                                        el.sessionId !==
+                    // Parent container - should be full screen
+                    <div style={{
+                        width: "100%",
+                        height: "100%",
+                        minHeight: "100vh",
+                        minWidth: "100vw",
+                        overflow: "hidden",
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        position: "relative",
+                    }}>
+                        <div style={{
+                            width: "100%",
+                            height: "100%",
+                            position: "relative",
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "center",
+                            textAlign: "center"
+                        }}>
+                            <div style={{
+                                display: "flex",
+                                flexDirection: "column",
+                            }} className="chatbox-style">
+                                <Box>
+                                    <Content>
+                                        <div style={{
+                                            display: "flex",
+                                            flexDirection: "row",
+                                            width: "100%",
+                                            justifyContent: "center",
+                                        }}>
+                                            <h2>
+                                                {username && (
+                                                    <>
+                                                        {days[date.getUTCDay()]},{" "}
+                                                        <span>
+                                                            {date.getUTCDate()}{" "}
+                                                            {months[date.getUTCMonth()]}
+                                                        </span>{" "}
+                                                        {date.getFullYear()}
+                                                    </>
+                                                )}
+                                                {!username && (
+                                                    <>
+                                                        {"Chatting to: "}{" "}
+                                                        <span>{username}</span>
+                                                    </>
+                                                )}
+                                            </h2>
+
+                                            <Cross
+                                                handleLeave={() => {
+                                                    this.handleLeave();
+                                                }}
+                                            />
+                                        </div>
+                                        <div style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            width: "100%",
+                                            height: "100%",
+                                            flexGrow: 1,
+                                            overflowY: "auto",
+                                            paddingTop: "1em",
+                                            paddingBottom: "1em",
+                                        }}>
+                                            {conversation.map((el) => {
+                                                return (
+                                                    <Message
+                                                        key={el.messageId}
+                                                        avatar={
+                                                            el.sessionId !==
+                                                                Connection.sessionId
+                                                                ? this.avatar1
+                                                                : this.avatar2
+                                                        }
+                                                        self={
+                                                            el.sessionId !==
                                                             Connection.sessionId
-                                                            ? this.avatar1
-                                                            : this.avatar2
-                                                    }
-                                                    self={
-                                                        el.sessionId !==
-                                                        Connection.sessionId
-                                                    }
-                                                // showAvatar
-                                                >
-                                                    {el.message}
-                                                </Message>
-                                            );
-                                        })}
+                                                        }
+                                                    // showAvatar
+                                                    >
+                                                        {el.message}
+                                                    </Message>
+                                                );
+                                            })}
+                                            <div
+                                                ref={(el) => {
+                                                    this.messagesEnd = el;
+                                                }}
+                                            />
+                                        </div>
 
-                                    </div>
-                                    <div
-                                        style={{ clear: "both" }}
-                                        ref={(el) => {
-                                            this.messagesEnd = el;
-                                        }}
-                                    />
-                                </Content>
-                                <ActionBar>
-                                    <input
-                                        type="text"
-                                        placeholder="Compose your message..."
-                                        onChange={(ev) => {
-                                            this.handleChange(ev);
-                                        }}
-                                        value={message}
-                                        onKeyDown={(ev) => {
-                                            if (ev.key === "Enter") {
+
+                                    </Content>
+                                    <ActionBar>
+                                        <input
+                                            type="text"
+                                            placeholder="Compose your message..."
+                                            onChange={(ev) => {
+                                                this.handleChange(ev);
+                                            }}
+                                            value={message}
+                                            onKeyDown={(ev) => {
+                                                if (ev.key === "Enter") {
+                                                    this.handleSend();
+                                                }
+                                            }}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => {
                                                 this.handleSend();
-                                            }
-                                        }}
-                                    />
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            this.handleSend();
-                                        }}
-                                    >
-                                        Send
-                                    </button>
-                                </ActionBar>
-                            </Box>
-
-                        </Container>
+                                            }}
+                                        >
+                                            Send
+                                        </button>
+                                    </ActionBar>
+                                </Box>
+                            </div>
+                        </div>
+                        <DrawingArea style={{
+                            top: 0,
+                            left: 0,
+                            position: 'fixed'
+                        }} />
                     </div>
 
                 )}

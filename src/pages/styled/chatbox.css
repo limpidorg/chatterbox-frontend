@@ -1,0 +1,14 @@
+.chatbox-style {
+    width: 70vw;
+    height: 70vh;
+    border-radius: 10px;
+    background: #edfafd;
+    z-index: 100;
+}
+
+@media screen and (max-width: 768px) {
+    .chatbox-style {
+        width: 100vw;
+        height: 100vh;
+    }
+}

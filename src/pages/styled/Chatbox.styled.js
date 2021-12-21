@@ -1,19 +1,5 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
-    font-family: "Aeonik";
-
-    position: relative;
-    width: 100%;
-    height: 100%;
-
-
-    background-color: ${({ theme }) => theme.mainColors.lightBlue};
-
-    overflow-y: scroll;
-
-
-`;
 
 export const Box = styled.div`
     position: relative;
@@ -40,8 +26,8 @@ export const Content = styled.div`
     position: relative;
     overflow-y: scroll;
     overflow-x: hidden;
-
-    padding: 25px 0 25px 0;
+    display: flex;
+    flex-direction: column;
 
     /* width */
     ::-webkit-scrollbar {
@@ -111,19 +97,12 @@ export const ActionBar = styled.div`
     width: 100%;
     height: 50px;
 
-    @media screen and (max-width: 768px) {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        height: 50px;
-    }
-
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 
-    border-top: 3px solid ${({ theme }) => theme.mainColors.grey};
+    border-top: 1px solid ${({ theme }) => theme.mainColors.grey};
 
     input {
         text-align: 

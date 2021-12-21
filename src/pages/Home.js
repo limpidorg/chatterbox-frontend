@@ -216,9 +216,9 @@ class Home extends React.Component {
                 {/* <Centered> */}
                 <div>
                     <h1>
-                        Chatterbox,
+                        Chatterbox.
                         <br />
-                        Chat <span>anonymously</span>
+                        Chat <span>anonymously.</span>
                     </h1>
 
                     <p>
