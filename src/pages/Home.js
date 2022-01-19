@@ -162,7 +162,7 @@ class Home extends React.Component {
                             title: "Join our discord server",
                             type: "normal",
                             handler: () => {
-                                window.open("https://discord.gg/YY3qTHkjaT");
+                                window.open("https://discord.gg/kaYnG8QvtH");
                                 this.setState({
                                     loading: null,
                                 });
@@ -310,8 +310,8 @@ class Home extends React.Component {
                                                         style={
                                                             invalidDiscordTag
                                                                 ? {
-                                                                      border: "2px solid red",
-                                                                  }
+                                                                    border: "2px solid red",
+                                                                }
                                                                 : {}
                                                         }
                                                         onKeyDown={ev => {
